@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  rainbowDavis(15); //should produce something?
+  rainbowFull(15); 
   colorWipe(strip.Color(0,0,0), 100); // Black
 
 }
@@ -114,33 +114,66 @@ float map2PI(int i) {
   return PI*2.0*float(i) / float(strip.numPixels());
 }
 
+void offsetChaser(uint16_t i, uint16_t j, uint16_t offset) {
+    uint16_t baseNum = i-offset;
+    strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum-1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum-2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum-3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  }
+  
 
-// I DONT KNOW WHAT IM DOING EXACTLY
+//I DONT KNOW WHAT IM DOING EXACTLY
 void rainbowDavis(uint8_t wait) {
-  uint16_t i, j, c, d;
-  d = 3;
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 2;
   c = strip.numPixels();
   
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
     
     for(i=0; i< strip.numPixels(); i++) {
 
-        if(j % strip.numPixels() == i) {      
-          strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-          strip.setPixelColor(i+1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); 
-          strip.setPixelColor(i+2, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-          strip.setPixelColor(i+3, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-          strip.setPixelColor(i+4, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-          strip.setPixelColor(i+5, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-          
+        if((j*tickSpeed) % strip.numPixels() == i) {      
+          offsetChaser(i, j, 0);
+          offsetChaser(i, j, 36);
+          offsetChaser(i, j, 72);
+          offsetChaser(i, j, 108);
+          offsetChaser(i, j, 144);
+          offsetChaser(i, j, 180);
+          offsetChaser(i, j, 216);
+
         }
         else {
           strip.setPixelColor(i, 0, 0, 0); //black
         }
+    }
+    strip.show();
+    delay(wait);
+  }
+}
 
-       // strip.setPixelColor(i+3, 0, 0, 0); //black
-        //strip.setPixelColor(i+4, 0, 0, 0); //black
-       // strip.setPixelColor(i+5, 0, 0, 0); //black
+void rainbowFull(uint8_t wait) {
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 1;
+  c = strip.numPixels();
+  
+  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+    
+    for(i=0; i< strip.numPixels()*2; i++) {
+
+        if((j*tickSpeed) % strip.numPixels() == i) {      
+          offsetChaser(i, j, 0);
+          offsetChaser(i, j, 36);
+          offsetChaser(i, j, 72);
+          offsetChaser(i, j, 108);
+          offsetChaser(i, j, 144);
+          offsetChaser(i, j, 180);
+          offsetChaser(i, j, 216);
+
+        }
+        else {
+          //strip.setPixelColor(i, 0, 0, 0); //black
+        }
     }
     strip.show();
     delay(wait);
