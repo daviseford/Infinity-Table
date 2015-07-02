@@ -63,6 +63,29 @@ uint32_t Wheel(byte WheelPos) {
 }
 
 /**
+  * Chaser
+  */
+void rainbowChaser () {
+  uint32_t c, d, chaser;
+uint16_t i, j, x, y;
+    
+    chaser = 3;
+    x = tick % 384;
+        c = GetColor(color % MAX_COLORS);       //color
+        j = tick % (strip.numPixels()/chaser);
+        for(i=0; i < strip.numPixels(); i++) {
+            if(i % (strip.numPixels()/chaser) == j) {
+                strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));        //first pixel
+                strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));    //second pixel
+                strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));
+            }
+            else {
+                strip.setPixelColor(i, strip.Color(0,0,0));
+            }
+        }
+}
+
+/**
  *      ^   ^   ^  
  * ~~~~~ ColorWave ~~~~~
  *        V   V   V   
@@ -114,70 +137,76 @@ float map2PI(int i) {
   return PI*2.0*float(i) / float(strip.numPixels());
 }
 
-
-
-    d = 3;
-    x = tick % 384;
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == j) {
-                strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));        //first pixel
-                strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));    //second pixel
-                strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-
-
-    uint32_t GetColor(int c)
+uint32_t Wheel(uint16_t WheelPos)
+{
+    byte r, g, b;
+    switch(WheelPos / 128)
     {
-        switch(c) {
-            case 0:
-            return strip.Color(127,0,0);  //red
-            case 1:
-            return strip.Color(127,0,60);  
-            case 2:
-            return strip.Color(127,0,127); 
-        case 3:  //orange
-        return strip.Color(127,60,0);
-        case 4:  //yellow
-        return strip.Color(127,127,0);
-        case 5:
-        return strip.Color(127,127,60);
-        case 6:
-        return strip.Color(60,127,0);
-        case 7:
-        return strip.Color(60,127,127);
-        case 8:
-        return strip.Color(60,60,127);
-        case 9:
-        return strip.Color(60,90,60);
-        case 10:
-        return strip.Color(60,60,0);
-        case 11:
-            return strip.Color(0,0,127);  //blue
-            case 12:
-            return strip.Color(0,60,127);
-            case 13:
-            return strip.Color(0,127,127);
-            case 14:
-            return strip.Color(0,127,0);  //green
-            case 15:
-            return strip.Color(127,30,10);
-            case 16:
-            return strip.Color(25,80,100);
-            case 17:
-            return strip.Color(127,127,127);  //White
-            case 18:
-            int r, g, b;
-            r = random(0, 50);
-            g = random(40, 90);
-            b = random(80, 128);
-            return strip.Color(r,g,b);
-            default:
-            return strip.Color(0,0,0);
-        }
+        case 0:
+        r = 127 - WheelPos % 128; // red down
+        g = WheelPos % 128;       // green up
+        b = 0;                    // blue off
+        break;
+        case 1:
+        g = 127 - WheelPos % 128; // green down
+        b = WheelPos % 128;       // blue up
+        r = 0;                    // red off
+        break;
+        case 2:
+        b = 127 - WheelPos % 128; // blue down
+        r = WheelPos % 128;       // red up
+        g = 0;                    // green off
+        break;
     }
+    return(strip.Color(r,g,b));
+}
+
+uint32_t GetColor(int c)
+{
+    switch(c) {
+        case 0:
+        return strip.Color(127,0,0);  //red
+        case 1:
+        return strip.Color(127,0,60);  
+        case 2:
+        return strip.Color(127,0,127); 
+    case 3:  //orange
+    return strip.Color(127,60,0);
+    case 4:  //yellow
+    return strip.Color(127,127,0);
+    case 5:
+    return strip.Color(127,127,60);
+    case 6:
+    return strip.Color(60,127,0);
+    case 7:
+    return strip.Color(60,127,127);
+    case 8:
+    return strip.Color(60,60,127);
+    case 9:
+    return strip.Color(60,90,60);
+    case 10:
+    return strip.Color(60,60,0);
+    case 11:
+        return strip.Color(0,0,127);  //blue
+        case 12:
+        return strip.Color(0,60,127);
+        case 13:
+        return strip.Color(0,127,127);
+        case 14:
+        return strip.Color(0,127,0);  //green
+        case 15:
+        return strip.Color(127,30,10);
+        case 16:
+        return strip.Color(25,80,100);
+        case 17:
+        return strip.Color(127,127,127);  //White
+        case 18:
+        int r, g, b;
+        r = random(0, 50);
+        g = random(40, 90);
+        b = random(80, 128);
+        return strip.Color(r,g,b);
+        default:
+        return strip.Color(0,0,0);
+    }
+}

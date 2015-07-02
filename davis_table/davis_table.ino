@@ -122,6 +122,12 @@ void rainbowDavis(uint8_t wait) {
   int thisArray[3];
   int nextArray[3];
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+<<<<<<< Updated upstream
+=======
+    chaser = 4;
+    c = j % 80;
+    d = j % (strip.numPixels()/chaser);
+>>>>>>> Stashed changes
     for(i=0; i< strip.numPixels(); i++) {
 
         prevArray[(i-3), (i-2), (i-1)];
