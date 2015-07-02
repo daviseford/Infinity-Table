@@ -124,6 +124,8 @@ void rainbowDavis(uint8_t wait) {
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
     for(i=0; i< strip.numPixels(); i++) {
 
+      //so in theory this should create a chaser with six surrounding black leds (three on each side)
+
         prevArray[(i-3), (i-2), (i-1)];
         thisArray[i, i+1, i+2];
         nextArray[i+3, i+4, i+5];
@@ -132,9 +134,9 @@ void rainbowDavis(uint8_t wait) {
         strip.setPixelColor(prevArray[1], 0, 0, 0); //black
         strip.setPixelColor(prevArray[2], 0, 0, 0); //black
       
-        strip.setPixelColor(thisArray[0], Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-        strip.setPixelColor(thisArray[1], Wheel(((i * 256 / strip.numPixels()) + j) & 255)); 
-        strip.setPixelColor(thisArray[2], Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+        strip.setPixelColor(i+1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); 
+        strip.setPixelColor(i+2, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
 
         strip.setPixelColor(nextArray[0], 0, 0, 0); //black
         strip.setPixelColor(nextArray[1], 0, 0, 0); //black
