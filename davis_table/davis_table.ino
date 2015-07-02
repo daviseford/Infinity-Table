@@ -117,7 +117,7 @@ float map2PI(int i) {
 
 // I DONT KNOW WHAT IM DOING EXACTLY
 void rainbowDavis(uint8_t wait) {
-  uint16_t i, j;  
+  uint16_t i, j, chaser, c, d;  
 
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
     chaser = 6;
@@ -135,4 +135,5 @@ void rainbowDavis(uint8_t wait) {
     strip.show();
     delay(wait);
   }
+}
 }
