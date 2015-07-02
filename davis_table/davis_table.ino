@@ -117,30 +117,30 @@ float map2PI(int i) {
 
 // I DONT KNOW WHAT IM DOING EXACTLY
 void rainbowDavis(uint8_t wait) {
-  uint16_t i, j;  
-  int prevArray[3];
-  int thisArray[3];
-  int nextArray[3];
+  uint16_t i, j, c, d;
+  d = 3;
+  c = strip.numPixels();
+  
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+    
     for(i=0; i< strip.numPixels(); i++) {
 
-      //so in theory this should create a chaser with six surrounding black leds (three on each side)
+        if(j % strip.numPixels() == i) {      
+          strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+          strip.setPixelColor(i+1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); 
+          strip.setPixelColor(i+2, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+          strip.setPixelColor(i+3, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+          strip.setPixelColor(i+4, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+          strip.setPixelColor(i+5, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+          
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 0); //black
+        }
 
-        prevArray[(i-3), (i-2), (i-1)];
-        thisArray[i, i+1, i+2];
-        nextArray[i+3, i+4, i+5];
-
-        strip.setPixelColor(prevArray[0], 0, 0, 0); //black
-        strip.setPixelColor(prevArray[1], 0, 0, 0); //black
-        strip.setPixelColor(prevArray[2], 0, 0, 0); //black
-      
-        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-        strip.setPixelColor(i+1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); 
-        strip.setPixelColor(i+2, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-
-        strip.setPixelColor(nextArray[0], 0, 0, 0); //black
-        strip.setPixelColor(nextArray[1], 0, 0, 0); //black
-        strip.setPixelColor(nextArray[2], 0, 0, 0); //black
+       // strip.setPixelColor(i+3, 0, 0, 0); //black
+        //strip.setPixelColor(i+4, 0, 0, 0); //black
+       // strip.setPixelColor(i+5, 0, 0, 0); //black
     }
     strip.show();
     delay(wait);
