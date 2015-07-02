@@ -117,19 +117,20 @@ float map2PI(int i) {
 
 // I DONT KNOW WHAT IM DOING EXACTLY
 void rainbowDavis(uint8_t wait) {
-  uint16_t i, j;
+  uint16_t i, j;  
 
   for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
+    chaser = 6;
+    c = j % 80;
+    d = j % (strip.numPixels()/chaser);
     for(i=0; i< strip.numPixels(); i++) {
-      if(i % 3 ){
+      if(i % (strip.numPixels()/chaser) == c) {
         strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-        strip.setPixelColor(i+9, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-        strip.setPixelColor(i+18, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      }
-      else {
-        strip.setPixelColor(i, 0, 0, 0);
-      }
-      
+        strip.setPixelColor(i+1, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+        strip.setPixelColor(i+2, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+    }
+    else {
+      strip.setPixelColor(i, 0, 0, 0); //black
     }
     strip.show();
     delay(wait);
