@@ -14,21 +14,22 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIPSIZE, PINdroite, NEO_GRB + NEO_
 
 void setup() {
   strip.begin();
-  strip.setBrightness(75);  // Lower brightness and save eyeballs OR NOT
+  strip.setBrightness(60);  // Lower brightness and save eyeballs OR NOT
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  amandaColors(20);
-  solidColors(15);
-  rainbowCycle(15);
-  northSouthChaseFull(15);
-  rainbowFull(15);
-  rainbowDavis(15);
-  colorWave(8);
-  rainbowCycleNorthSouth(15);
-  colorWipe(strip.Color(0,0,0), 100); // Black
+  testColors(20);
+  //  amandaColors(20);
+  //  solidColors(15);
+  //  rainbowCycle(15);
+  //  northSouthChaseFull(15);
+  //  rainbowFull(15);
+  //  rainbowDavis(15);
+  //  colorWave(8);
+  //  rainbowCycleNorthSouth(15);
+  //  colorWipe(strip.Color(0,0,0), 100); // Black
 
 }
 
@@ -509,25 +510,374 @@ uint32_t amandaColorHolder(int selection) {
   }
 }
 
-
 //custom
 void amandaColors(uint8_t wait) {
-  uint16_t i, j ,caseNum;
+  uint16_t i, j, caseNum;
 
-  for (j = 0; j < 100; j++) { 
+  for (j = 0; j < 100; j++) {
     if (caseNum > 52) { //52 cases above in amandaColorHolder
-        caseNum = 0;
-      }
-      else {
-        caseNum++;
-      }
-    for (i = 0; i < strip.numPixels(); i++) {      
+      caseNum = 0;
+    }
+    else {
+      caseNum++;
+    }
+    for (i = 0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, (amandaColorHolder(caseNum)));
+      //check the case ahead and interpolate the moves
+      //return to caseNum after interpolation
+      //so caseNum RG(B) is (200) and caseNum+1 RG(B) is (222)
+      //run until that interpolation finishes
     }
     strip.show();
-    delay(wait*30);
+    delay(wait * 30);
   }
 }
+
+
+int testColorHolder(int selection) {
+
+
+  switch (selection) {
+    case 0:
+      int rgb[3] = {255, 0, 0}; //red
+    return rgb;
+      break;
+
+    case 1:
+      int rgb[3] = {255, 25, 25};
+    return rgb;
+      break;
+
+    case 2:
+      int rgb[3] = {255, 48, 48};
+    return rgb;
+      break;
+
+    case 3:
+      int rgb[3] = {255, 89, 89};
+    return rgb;
+      break;
+
+    case 4:
+      int rgb[3] = {255, 122, 122};
+    return rgb;
+      break;
+
+    case 5:
+      int rgb[3] = {255, 162, 162};
+    return rgb;
+      break;
+
+    case 6:
+      int rgb[3] = {255, 162, 162};
+    return rgb;
+      break;
+
+    case 7:
+      int rgb[3] = {255, 204, 204}; //pink
+    return rgb;
+      break;
+
+    case 8:
+      int rgb[3] = {255, 204, 255};
+    return rgb;
+      break;
+
+    case 9:
+      int rgb[3] = {255, 153, 255}; //periwinkle pink
+    return rgb;
+      break;
+
+    case 10:
+      int rgb[3] = {255, 102, 255}; //
+    return rgb;
+      break;
+
+    case 11:
+      int rgb[3] = {255, 0, 255}; //
+    return rgb;
+      break;
+
+    case 12:
+      int rgb[3] = {255, 51, 204}; //
+    return rgb;
+      break;
+
+    case 13:
+      int rgb[3] = {255, 51, 153}; //
+    return rgb;
+      break;
+
+    case 14:
+      int rgb[3] = {255, 0, 102}; // tangerine
+    return rgb;
+      break;
+
+    case 15:
+      int rgb[3] = {255, 80, 80}; // orange
+    return rgb;
+      break;
+
+    case 16:
+      int rgb[3] = {255, 102, 0}; // orange
+    return rgb;
+      break;
+
+    case 17:
+      int rgb[3] = {255, 153, 51}; //
+    return rgb;
+      break;
+
+    case 18:
+      int rgb[3] = {255, 204, 0}; //golden
+    return rgb;
+      break;
+
+    case 19:
+      int rgb[3] = {255, 255, 0}; //yellow
+    return rgb;
+      break;
+
+    case 20:
+      int rgb[3] = {255, 255, 102}; //
+    return rgb;
+      break;
+
+    case 21:
+      int rgb[3] = {255, 255, 153}; //
+    return rgb;
+      break;
+
+    case 22:
+      int rgb[3] = {255, 255, 204}; //
+    return rgb;
+      break;
+
+    case 23:
+      int rgb[3] = {204, 255, 153}; //
+    
+      break;
+
+    case 24:
+      int rgb[3] = {153, 255, 102}; // light green
+    return rgb;
+      break;
+
+    case 25:
+      int rgb[3] = {102, 255, 102}; //
+    return rgb;
+      break;
+
+    case 26:
+      int rgb[3] = {0, 255, 0}; //lime green
+    return rgb;
+      break;
+
+    case 27:
+      int rgb[3] = {0, 204, 0}; //
+    return rgb;
+      break;
+
+    case 28:
+      int rgb[3] = {0, 204, 102}; //
+    return rgb;
+      break;
+
+    case 29:
+      int rgb[3] = {0, 204, 153}; //
+    return rgb;
+      break;
+
+    case 30:
+      int rgb[3] = {77, 219, 184}; //
+    return rgb;
+      break;
+
+    case 31:
+      int rgb[3] = {0, 153, 153}; //
+    return rgb;
+      break;
+
+    case 32:
+      int rgb[3] = {0, 102, 153}; //
+    return rgb;
+      break;
+
+    case 33:
+      int rgb[3] = {0, 153, 204}; //
+    return rgb;
+      break;
+
+    case 34:
+      int rgb[3] = {0, 102, 204}; //
+    return rgb;
+      break;
+
+    case 35:
+      int rgb[3] = {0, 51, 204}; //
+    return rgb;
+      break;
+
+    case 36:
+      int rgb[3] = {0, 0, 255}; // blue
+    return rgb;
+      break;
+
+    case 37:
+      int rgb[3] = {51, 51, 255}; //
+    return rgb;
+      break;
+
+    case 38:
+      int rgb[3] = {51, 102, 255}; //
+    return rgb;
+      break;
+
+    case 39:
+      int rgb[3] = {102, 153, 255}; //
+    return rgb;
+      break;
+
+    case 40:
+      int rgb[3] = {153, 204, 255}; //
+    return rgb;
+      break;
+
+    case 41:
+      int rgb[3] = {204, 204, 255}; //
+    return rgb;
+      break;
+
+    case 42:
+      int rgb[3] = {204, 153, 255}; //
+    return rgb;
+      break;
+
+    case 43:
+      int rgb[3] = {204, 102, 255}; //
+    return rgb;
+      break;
+
+    case 44:
+      int rgb[3] = {204, 51, 255}; //
+    return rgb;
+      break;
+
+    case 45:
+      int rgb[3] = {204, 0, 255}; //
+    return rgb;
+      break;
+
+    case 46:
+      int rgb[3] = {153, 0, 204}; //
+    return rgb;
+      break;
+
+    case 47:
+      int rgb[3] = {102, 0, 102}; //
+    return rgb;
+      break;
+
+    case 48:
+      int rgb[3] = {92, 0, 92}; //
+    return rgb;
+      break;
+
+    case 49:
+      int rgb[3] = {74, 0, 74}; //
+    return rgb;
+      break;
+
+    case 50:
+      int rgb[3] = {44, 0, 44}; //
+    return rgb;
+      break;
+
+    case 51:
+      int rgb[3] = {22, 0, 22}; //
+    return rgb;
+      break;
+
+    case 52:
+      int rgb[3] = {0, 0, 0}; //black
+    return rgb;
+      break;
+
+    default:
+      int rgb[3] = {0, 0, 0}; //black
+    return rgb;
+  }
+}
+//custom
+void testColors(uint8_t wait) {
+  uint16_t i, j, caseNum;
+  int r, g, b;
+
+
+  for (j = 0; j < 174 * 5; j++) {
+
+  if (caseNum > 51) { //52 cases above in testColorHolder
+      caseNum = 0;
+    }
+
+    int currentCase = testColorHolder(caseNum);
+    int nextCase = testColorHolder(caseNum + 1);
+
+    int startColor [3] = {currentCase[0], currentCase[1], currentCase[2]};
+    int endColor [3] = {nextCase[0], nextCase[1], nextCase[2]};
+
+
+    if (startColor[0] == endColor[0]) {
+      r = endColor[0];
+    }
+    else if (startColor[0] < endColor[0]) {
+      r = startColor[0];
+      startColor[0]++;
+    }
+    else if (startColor[0] > endColor[0]) {
+      r = startColor[0];
+      startColor[0]--;
+    }
+
+    if (startColor[1] == endColor[1]) {
+      g = endColor[1];
+    }
+    else if (startColor[1] < endColor[1]) {
+      g = startColor[1];
+      startColor[1]++;
+    }
+    else if (startColor[1] > endColor[1]) {
+      g = startColor[1];
+      startColor[1]--;
+    }
+
+    if (startColor[2] == endColor[2]) {
+      b = endColor[2];
+    }
+    else if (startColor[2] < endColor[2]) {
+      b = startColor[2];
+      startColor[2]++;
+    }
+    else if (startColor[2] > endColor[2]) {
+      b = startColor[2];
+      startColor[2]--;
+    }
+
+    if (r = endColor[0] && g = endColor[1] && b = endColor[2]) {
+      caseNum++
+    }
+
+
+
+    for (i = 0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, r, g, b); //if value comparison doesn't work, turn red
+
+    }
+    strip.show();
+    delay(wait / 3);
+  }
+}
+
 
 // Slightly different, this makes the rainbow equally distributed throughout
 void solidColors(uint8_t wait) {
