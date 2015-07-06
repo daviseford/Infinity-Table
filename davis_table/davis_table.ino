@@ -579,336 +579,336 @@ int* testColorHolder(int selection) {
       int rgb[3] = {255, 162, 162};
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 6:
     {
       int rgb[3] = {255, 162, 162};
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 7:
     {
       int rgb[3] = {255, 204, 204}; //pink
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 8:
     {
       int rgb[3] = {255, 204, 255};
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 9:
     {
       int rgb[3] = {255, 153, 255}; //periwinkle pink
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 10:
     {
       int rgb[3] = {255, 102, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 11:
     {
       int rgb[3] = {255, 0, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 12:
     {
       int rgb[3] = {255, 51, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 13:
     {
       int rgb[3] = {255, 51, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 14:
     {
       int rgb[3] = {255, 0, 102}; // tangerine
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 15:
     {
       int rgb[3] = {255, 80, 80}; // orange
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 16:
     {
       int rgb[3] = {255, 102, 0}; // orange
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 17:
     {
       int rgb[3] = {255, 153, 51}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 18:
     {
       int rgb[3] = {255, 204, 0}; //golden
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 19:
     {
       int rgb[3] = {255, 255, 0}; //yellow
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 20:
     {
       int rgb[3] = {255, 255, 102}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 21:
     {
       int rgb[3] = {255, 255, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 22:
     {
       int rgb[3] = {255, 255, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 23:
     {
       int rgb[3] = {204, 255, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 24:
     {
       int rgb[3] = {153, 255, 102}; // light green
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 25:
     {
       int rgb[3] = {102, 255, 102}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 26:
     {
       int rgb[3] = {0, 255, 0}; //lime green
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 27:
     {
       int rgb[3] = {0, 204, 0}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 28:
     {
       int rgb[3] = {0, 204, 102}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 29:
     {
       int rgb[3] = {0, 204, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 30:
     {
       int rgb[3] = {77, 219, 184}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 31:
     {
       int rgb[3] = {0, 153, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 32:
     {
       int rgb[3] = {0, 102, 153}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 33:
     {
       int rgb[3] = {0, 153, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 34:
     {
       int rgb[3] = {0, 102, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 35:
     {
       int rgb[3] = {0, 51, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 36:
     {
       int rgb[3] = {0, 0, 255}; // blue
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 37:
     {
       int rgb[3] = {51, 51, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 38:
     {
       int rgb[3] = {51, 102, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 39:
     {
       int rgb[3] = {102, 153, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 40:
     {
       int rgb[3] = {153, 204, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 41:
     {
       int rgb[3] = {204, 204, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 42:
     {
       int rgb[3] = {204, 153, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 43:
     {
       int rgb[3] = {204, 102, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 44:
     {
       int rgb[3] = {204, 51, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 45:
     {
       int rgb[3] = {204, 0, 255}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 46:
     {
       int rgb[3] = {153, 0, 204}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 47:
     {
       int rgb[3] = {102, 0, 102}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 48:
     {
       int rgb[3] = {92, 0, 92}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 49:
     {
       int rgb[3] = {74, 0, 74}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 50:
     {
       int rgb[3] = {44, 0, 44}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 51:
     {
       int rgb[3] = {22, 0, 22}; //
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     case 52:
     {
       int rgb[3] = {0, 0, 0}; //black
       pRgb = rgb;
       return pRgb;
-      break;
+	  break;
     }
     default:
     {
@@ -927,7 +927,7 @@ void testColors(uint8_t wait) {
 
   for (j = 0; j < 174 * 5; j++) {
 
-  if (caseNum > 51) { //52 cases above in testColorHolder
+    if (caseNum > 51) { //52 cases above in testColorHolder
       caseNum = 0;
     }
 
