@@ -2,8 +2,8 @@
 Code for an Infinity table
 
 #Materials
-Arduino Uno
-Neopixel 60 LED strip http://www.adafruit.com/products/1461
+Arduino Uno  
+4 Meters x Adafruit Neopixel 60 LED Strip (Black) http://www.adafruit.com/products/1461
 
 
 #Home Depot Trip
