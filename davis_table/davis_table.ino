@@ -14,21 +14,21 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIPSIZE, PINdroite, NEO_GRB + NEO_
 
 void setup() {
   strip.begin();
-  strip.setBrightness(60);  // Lower brightness and save eyeballs OR NOT
+  strip.setBrightness(55);  // Lower brightness and save eyeballs OR NOT
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
+  chaserTest(35);
   amandaColors(20);
-  //  solidColors(15);
-  //  rainbowCycle(15);
-  //  northSouthChaseFull(15);
-  //  rainbowFull(15);
-  //  rainbowDavis(15);
-  //  colorWave(8);
-  //  rainbowCycleNorthSouth(15);
-  //  colorWipe(strip.Color(0,0,0), 100); // Black
+  rainbowCycle(15);
+  northSouthChaseFull(15);
+  rainbowFull(15);
+  rainbowDavis(15);
+  colorWave(7);
+  rainbowCycleNorthSouth(15);
+  colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
 
@@ -39,6 +39,37 @@ void colorWipe(uint32_t c, uint8_t wait) {
     strip.show();
     delay(wait);
   }
+}
+
+// Experimenting with a chaser that bounces back and forth.
+// -Davis
+void chaserTest(uint8_t wait) {
+  uint16_t i, j;
+
+  for (j = 0; j < 256*2; j++) {
+    /**  uint32_t nextValue = random[a,b,c]
+     *   TODO: Add a random generatorfor nextvalue, then implement the RGB fading that I accomplished earlier today.
+     *   Change the background every time the chaser loops around
+     *   -Davis
+     */
+
+    for (i = 0; i < strip.numPixels(); i++) {
+      if (j % strip.numPixels() == i) {
+        strip.setPixelColor(i, 133, 0, 0); //red
+        strip.setPixelColor(i - 1, 120, 0, 0); //red
+        strip.setPixelColor(i - 2, 100, 10, 0);
+      }
+      else {
+        strip.setPixelColor(i, 0, 0, 64); //blue
+      }
+
+    }
+
+    strip.show();
+    delay(wait);
+  }
+
+
 }
 
 
@@ -674,7 +705,7 @@ int* amandaColorHolder(int selection) {
 }
 
 /*  Amanda's Custom Color Sequence, with automatic RGB value blending!
- *  
+ *
  *  The following is a cheap way of incrementing/decrementing RGB values
  *  in order to produce a blending effect. We set the target RGB to pEndcolor,
  *  which is an array with 3 values [R, G, B]. The program will step through
@@ -689,15 +720,15 @@ int* amandaColorHolder(int selection) {
  *  Example of limitation:
  *
  *  Going from (255, 20, 20) to (255, 0, 0) will take twenty iterations.
- *  Going from (255, 255, 255) to (255, 0, 0) will take two hundred fifty five iterations.  
+ *  Going from (255, 255, 255) to (255, 0, 0) will take two hundred fifty five iterations.
  *  This means there is a time variance (colors appear for different lengths of time,
- *  depending on their RGB distance from the next value)  
- *  
+ *  depending on their RGB distance from the next value)
+ *
  *  This can lead to flickering sequences with color values that are too close together.
- *  
+ *
  *  -Davis Ford, 7/6/2015
  */
- 
+
 void amandaColors(uint8_t wait) {
   uint16_t i, j, caseNum;
   int * pStartColor, * pEndColor; //credit to Matthew Ibarra (pengii23) for figuring out my pointers
