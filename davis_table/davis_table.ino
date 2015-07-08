@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  chaserTest(35);
+  davisRandomChaser(15);
   amandaColors(20);
   rainbowCycle(15);
   northSouthChaseFull(15);
@@ -43,32 +43,53 @@ void colorWipe(uint32_t c, uint8_t wait) {
 
 // Experimenting with a chaser that bounces back and forth.
 // -Davis
-void chaserTest(uint8_t wait) {
-  uint16_t i, j;
+void davisRandomChaser(uint8_t wait) {
+  uint16_t i, j, tick, cycle;
+  cycle = 50; //how many times we'll do a full loop (forward and back)
+  for (tick = 0; tick < cycle; tick++) {
 
-  for (j = 0; j < 256*2; j++) {
-    /**  uint32_t nextValue = random[a,b,c]
-     *   TODO: Add a random generatorfor nextvalue, then implement the RGB fading that I accomplished earlier today.
-     *   Change the background every time the chaser loops around
-     *   -Davis
-     */
+    int randomRed = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 225 + 30;
+    int randomBlue = rand() % 225 + 30;
+    
+    for (j = strip.numPixels(); j > 0; j--) {
 
-    for (i = 0; i < strip.numPixels(); i++) {
-      if (j % strip.numPixels() == i) {
-        strip.setPixelColor(i, 133, 0, 0); //red
-        strip.setPixelColor(i - 1, 120, 0, 0); //red
-        strip.setPixelColor(i - 2, 100, 10, 0);
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-3, randomRed, randomGreen, randomBlue);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
       }
-      else {
-        strip.setPixelColor(i, 0, 0, 64); //blue
-      }
 
+      strip.show();
+      delay(wait);
     }
 
-    strip.show();
-    delay(wait);
-  }
+    for (j = 0; j < strip.numPixels(); j++) {
 
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i-3, randomRed, randomGreen, randomBlue);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+  }
 
 }
 
