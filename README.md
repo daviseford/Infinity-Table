@@ -1,9 +1,9 @@
 # Infinity-Table
 Code for an Infinity table.  
 
-#Notes
-Our LED strip contains 174 pixels.
-35 per side, East/West 
+#Notes  
+Our LED strip contains 174 pixels.  
+35 per side, East/West  
 52 per side, North/South  
 
 davis_table uses the [Adafruit Neopixel library](https://github.com/adafruit/Adafruit_NeoPixel)  
