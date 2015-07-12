@@ -20,15 +20,16 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisRandomChaser(15);
-  amandaColors(20);
-  rainbowCycle(15);
-  northSouthChaseFull(15);
-  rainbowFull(15);
-  rainbowDavis(15);
-  colorWave(7);
-  rainbowCycleNorthSouth(15);
-  colorWipe(strip.Color(0, 0, 0), 100); // Black
+  testPixels(20);
+  //  davisRandomChaser(15);
+  //  amandaColors(20);
+  //  rainbowCycle(15);
+  //  northSouthChaseFull(15);
+  //  rainbowFull(15);
+  //  rainbowDavis(15);
+  //  colorWave(7);
+  //  rainbowCycleNorthSouth(15);
+  //  colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
 
@@ -38,6 +39,20 @@ void colorWipe(uint32_t c, uint8_t wait) {
     strip.setPixelColor(i, c);
     strip.show();
     delay(wait);
+  }
+}
+
+void testPixels( uint8_t wait) {
+  uint16_t i;
+  for (i = 0; i < strip.numPixels(); i++) {
+    if (i == 63 || i == 150) {
+      strip.setPixelColor(i, 255, 0, 0);
+      strip.show();
+      delay(wait);
+    }
+    else {
+      strip.setPixelColor(i, 0, 0, 0);
+    }
   }
 }
 
@@ -51,15 +66,15 @@ void davisRandomChaser(uint8_t wait) {
     int randomRed = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
     int randomGreen = rand() % 225 + 30;
     int randomBlue = rand() % 225 + 30;
-    
+
     for (j = strip.numPixels(); j > 0; j--) {
 
       for (i = 0; i < strip.numPixels(); i++) {
         if (j % strip.numPixels() == i) {
           strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-1, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-2, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-3, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
         }
         else {
           strip.setPixelColor(i, 0, 0, 64); //blue
@@ -76,9 +91,9 @@ void davisRandomChaser(uint8_t wait) {
       for (i = 0; i < strip.numPixels(); i++) {
         if (j % strip.numPixels() == i) {
           strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-1, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-2, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i-3, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
         }
         else {
           strip.setPixelColor(i, 0, 0, 64); //blue
