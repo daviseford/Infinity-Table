@@ -1,10 +1,7 @@
 #include <Adafruit_NeoPixel.h>
 
 #define PINdroite 1
-#define PINupmode 2
-#define PINupcolor 3
-#define PINpower 4
-#define STRIPSIZE 60 * 4
+#define STRIPSIZE 174
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -15,578 +12,208 @@
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
 Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIPSIZE, PINdroite, NEO_GRB + NEO_KHZ800);
 
-int CYCLES_DEBOUNCE = 2; //check the button for X ticks to see if it is bouncing
-int MAX_COLORS = 19;
-int MAX_MODES = 17;
-int MAX_STRIPES = 5;
-
-int intervalDemo = 10 * 1000;     // Looking like this is 10 seconds.
-
-/*
-
-int upModeButtonState = HIGH;
-int upModeButtonCycles = 0;
-int upColorButtonState = HIGH;
-int upColorButtonCycles = 0;
-
-int CYCLES_DEBOUNCE = 2; //check the button for X ticks to see if it is bouncing
-
-*/
-
-unsigned long tick = 0;
-
-int mode = 1;
-int color = 1;
-
-long previousMillis = 0;
-long interval = 500;
-
-uint16_t i, j, x, y;
-uint32_t c, d;
-
-// Set the first variable to the NUMBER of pixels. 32 = 32 pixels in a row
-// The LED strips are 32 LEDs per meter but you can extend/cut the strip
-
-/*
-
-void ISR_Wake() {
-    detachInterrupt(0);
-    detachInterrupt(1);
-}
-
-void blackout() {
-    for(int i=0; i < strip.numPixels()+1; i++) {
-        strip.setPixelColor(i, strip.Color(0,0,0));
-    }
-    strip.show();
-}
-
-
-void triggerSleep() {
-    blackout();
-
-    attachInterrupt(0,ISR_Wake,LOW); //pin 2
-    attachInterrupt(1,ISR_Wake,LOW); //pin 3
-
-    set_sleep_mode(SLEEP_MODE_PWR_DOWN);
-    sleep_enable();
-    sleep_mode();
-    //sleeping, until rudely interrupted
-    sleep_disable();
-}
-
-void triggerModeUp() {
-    ++mode;
-    blackout();
-}
-
-void triggerColorUp() {
-    color++;
-    blackout();
-}
-
-void handleButtons() {
-    if(digitalRead(powerPin) == LOW) {
-        triggerSleep();
-    }
-    // software debounce
-    if(digitalRead(upModePin) != upModeButtonState) {
-        upModeButtonCycles++;
-        if(upModeButtonCycles > CYCLES_DEBOUNCE) {
-            upModeButtonCycles = 0;
-            upModeButtonState = digitalRead(upModePin);
-            if(upModeButtonState == LOW) {
-                triggerModeUp();
-            }
-        }
-    }
-    // software debounce
-    if(digitalRead(upColorPin) != upColorButtonState) {
-        upColorButtonCycles++;
-        if(upColorButtonCycles > CYCLES_DEBOUNCE) {
-            upColorButtonCycles = 0;
-            upColorButtonState = digitalRead(upColorPin);
-            if(upColorButtonState == LOW) {
-                triggerColorUp();
-            }
-        }
-    }
-}
-
-*/
-
-void handleStrip( int colorCase ) {
-    //switch(mode%MAX_MODES) {
-    switch (colorCase){
-    case 0: //solid
-    c = GetColor(color%MAX_COLORS);
-    for(i=0; i<strip.numPixels(); i++) {
-        strip.setPixelColor(i, c);
-    }
-    break;
-    case 1:  //every other led 
-    c = GetColor((tick%3+color)% MAX_COLORS);
-    for(i=0; i<strip.numPixels(); i++) {
-        strip.setPixelColor(i, c);
-    }
-    break;
-    case 2:
-    if(tick % 50 == 0) {
-        c = GetColor(color%MAX_COLORS);
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    if(tick % 50 == 25) {
-        c = strip.Color(0,0,0);
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    break;
-    case 3:  //strobe 2 color
-    if(tick % 30 == 0) {
-        c = GetColor(color%MAX_COLORS);
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    if(tick % 30 == 15) {
-        c = GetColor(color%MAX_COLORS+2);
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    break; 
-    case 4:  //strobe 3 color
-    if(tick % 60 == 20) {
-        c = GetColor(color%MAX_COLORS);
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    if(tick % 60 == 40) {
-        c = GetColor(color%MAX_COLORS+random(5));
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    if(tick % 60 == 60) {
-        c = GetColor(color%MAX_COLORS+random(2));
-        for(i=0; i<strip.numPixels(); i++) {
-            strip.setPixelColor(i, c);
-        }
-    }
-    break; 
-    case 5: //chasers
-        d = (color / MAX_COLORS) % MAX_STRIPES + 1; //chaser
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == j) {
-                strip.setPixelColor(i, c);
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;
-    case 6: //chasers + statics
-        d = (color / MAX_COLORS) % MAX_STRIPES + 1; //chaser
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            x = i % (strip.numPixels()/d);
-            if((x == j) || (x == 0)) {
-                strip.setPixelColor(i, c);
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;
-    case 7: //fuckin' rainbows
-    j = tick % 384;
-    for(i=0; i < strip.numPixels(); i++) {
-        strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-    }
-    break;
-    case 8:  //rainbow dither
-        d = (color / MAX_COLORS) % MAX_STRIPES + 1; //chaser
-        c = tick % 384;       
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));        //first pixel
-            strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //second pixel
-            strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //third pixel
-            strip.setPixelColor(i + 32, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));        //first pixel
-            strip.setPixelColor(i + 33, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //second pixel
-            strip.setPixelColor(i + 34, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));
-            strip.show();
-            strip.setPixelColor(i, 0);
-            strip.setPixelColor(i + 32, 0);
-
-        }
-        break;
-    case 9: //rainbow chaser
-        //d = random(3); //chaser
-    d = 3;
-    x = tick % 384;
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == j) {
-                strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));        //first pixel
-                strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));    //second pixel
-                strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;
-        /*case 8:  //rainbow chaser (3 pixel chaser)
-        d = (color / MAX_COLORS) % MAX_STRIPES + 1; //chaser
-        c = tick % 384;       
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-        if(i % (strip.numPixels()/d) == c) {
-        strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));        //first pixel
-        strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //second pixel
-        strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //third pixel
-        }
-        else {
-        strip.setPixelColor(i, strip.Color(0,0,0));
-        }
-        }
-        break;*/
-        /*case 10: //hands POV
-        j = tick % 150;
-        d = hands[j];
-        //green                     //orange
-        c = (j < 14)?GetColor((color+2)%MAX_COLORS):GetColor((color+3)%MAX_COLORS);
-        for(i=0;i<32;i++) {
-        //adding 32 to the index makes it appear on the side opposite the controller
-        if(d & 0x00000001) {
-        strip.setPixelColor(i+32, c);
-        }
-        else {
-        strip.setPixelColor(i+32, strip.Color(0,0,0));
-        }
-        d >>= 1;
-        }
-        break;
-        case 11: //tanner POV
-        j = tick % 150;
-        d = tanner[j];
-        //green                     //orange
-        c = GetColor(color % MAX_COLORS);
-        for(i=0;i<32;i++) {
-        //adding 32 to the index makes it appear on the side opposite the controller
-        if(d & 0x00000001) {
-        strip.setPixelColor(i+32, c);
-        }
-        else {
-        strip.setPixelColor(i+32, strip.Color(0,0,0));
-        }
-        d >>= 1;
-        }
-        break;
-        case 12: //tanner2 POV
-        j = tick % 150;
-        d = tanner2[j];
-        //green                     //orange
-        c = GetColor(color % MAX_COLORS);
-        for(i=0;i<32;i++) {
-        //adding 32 to the index makes it appear on the side opposite the controller
-        if(d & 0x00000001) {
-        strip.setPixelColor(i+32, c);
-        }
-        else {
-        strip.setPixelColor(i+32, strip.Color(0,0,0));
-        }
-        d >>= 1;
-        }
-        break;*/
-    case 10:  //hearts, entire strip
-    j = tick % 149;
-    d = hearts[j];
-        //green                     //orange
-    c = GetColor(color % MAX_COLORS);
-    for(i=0;i<32;i++) {
-            //adding 32 to the index makes it appear on the side opposite the controller
-        if(d & 0x00000001) {
-            strip.setPixelColor(i, c);
-            strip.setPixelColor(i+32, c);
-            strip.setPixelColor(i+64, c);
-        }
-        else {
-            strip.setPixelColor(i, strip.Color(0,0,0));
-            strip.setPixelColor(i+32, strip.Color(0,0,0));
-            strip.setPixelColor(i+64, strip.Color(0,0,0));
-        }
-        d >>= 1;
-    }
-    break;  
-    case 11:  //stripes
-    c = GetColor(color % MAX_COLORS);
-    d = GetColor((color +1) % MAX_COLORS);
-    for(i = 0; i < 4; i++) {
-        strip.setPixelColor(i, c);
-        strip.setPixelColor(i+9, c);
-        strip.setPixelColor(i+18, c);
-        strip.setPixelColor(i+27, c);
-        strip.setPixelColor(i+36, c);
-        strip.setPixelColor(i+45, c);
-        strip.setPixelColor(i+54, c);
-        strip.setPixelColor(i+63, c);
-        strip.setPixelColor(i+72, c);
-        strip.setPixelColor(i+81, c);
-        strip.setPixelColor(i+89, c);
-    }
-    for(i = 4; i < 9; i++) {
-        strip.setPixelColor(i, d);
-        strip.setPixelColor(i+9, d);
-        strip.setPixelColor(i+18, d);
-        strip.setPixelColor(i+27, d);
-        strip.setPixelColor(i+36, d);
-        strip.setPixelColor(i+45, d);
-        strip.setPixelColor(i+54, d);
-        strip.setPixelColor(i+63, d);
-        strip.setPixelColor(i+72, d);
-        strip.setPixelColor(i+81, d);
-        strip.setPixelColor(i+89, d);
-    }
-    break;
-    case 12:  //stripes rainbow color
-    c = GetColor(color % MAX_COLORS);
-    j = tick % 384;
-    for(i = 0; i < 4; i++) {
-        strip.setPixelColor(i, c);
-        strip.setPixelColor(i+9, c);
-        strip.setPixelColor(i+18, c);
-        strip.setPixelColor(i+27, c);
-        strip.setPixelColor(i+36, c);
-        strip.setPixelColor(i+45, c);
-        strip.setPixelColor(i+54, c);
-        strip.setPixelColor(i+63, c);
-        strip.setPixelColor(i+72, c);
-        strip.setPixelColor(i+81, c);
-        strip.setPixelColor(i+89, c);
-    }
-    for(i = 4; i < 9; i++) {
-        strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+9, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+18, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+27, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+36, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+45, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+54, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+63, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+72, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+81, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-        strip.setPixelColor(i+89, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + j) % 384));
-    }
-    break;
-    case 13:  //stripes changing color
-    c = GetColor(color % MAX_COLORS);
-        //d = GetColor((color + random(11) % MAX_COLORS));
-    j = tick % 384;
-    for(i = 0; i < 4; i++) {
-        strip.setPixelColor(i, c);
-        strip.setPixelColor(i+9, c);
-        strip.setPixelColor(i+18, c);
-        strip.setPixelColor(i+27, c);
-        strip.setPixelColor(i+36, c);
-        strip.setPixelColor(i+45, c);
-        strip.setPixelColor(i+54, c);
-        strip.setPixelColor(i+63, c);
-        strip.setPixelColor(i+72, c);
-        strip.setPixelColor(i+81, c);
-        strip.setPixelColor(i+89, c);
-    }
-    for(i = 4; i < 9; i++) {
-        d = GetColor((color + random(11)) % MAX_COLORS);
-        strip.setPixelColor(i, d);
-        strip.setPixelColor(i+9, d);
-        strip.setPixelColor(i+18, d);
-        strip.setPixelColor(i+27, d);
-        strip.setPixelColor(i+36, d);
-        strip.setPixelColor(i+45, d);
-        strip.setPixelColor(i+54, d);
-        strip.setPixelColor(i+63, d);
-        strip.setPixelColor(i+72, d);
-        strip.setPixelColor(i+81, d);
-        strip.setPixelColor(i+89, d);
-    }
-    break;
-    case 14:
-    for(i = 0; i < 4; i++) {
-        d = GetColor((color + random(3)) % MAX_COLORS);
-        strip.setPixelColor(i, d);
-        strip.setPixelColor(i+9, d);
-        strip.setPixelColor(i+18, d);
-        strip.setPixelColor(i+27, d);
-        strip.setPixelColor(i+36, d);
-        strip.setPixelColor(i+45, d);
-        strip.setPixelColor(i+54, d);
-        strip.setPixelColor(i+63, d);
-        strip.setPixelColor(i+72, d);
-        strip.setPixelColor(i+81, d);
-        strip.setPixelColor(i+89, d);
-    }
-    for(i = 4; i < 9; i++) {
-        d = GetColor((color + random(6)) % MAX_COLORS);
-        strip.setPixelColor(i, d);
-        strip.setPixelColor(i+9, d);
-        strip.setPixelColor(i+18, d);
-        strip.setPixelColor(i+27, d);
-        strip.setPixelColor(i+36, d);
-        strip.setPixelColor(i+45, d);
-        strip.setPixelColor(i+54, d);
-        strip.setPixelColor(i+63, d);
-        strip.setPixelColor(i+72, d);
-        strip.setPixelColor(i+81, d);
-        strip.setPixelColor(i+89, d);
-    }
-    break;
-    case 15: //solid
-    c = GetColor(color%MAX_COLORS);
-    for(i=0; i<strip.numPixels(); i++) {
-        strip.setPixelColor(i, c);
-    }
-    break;
-    case 16:  //rainbow chaser (3 pixel chaser) --------------DAVIS
-        d = (color / MAX_COLORS) % MAX_STRIPES +3; //chaser
-        //c = tick % 384;       
-        //c = tick % 96;
-        c = tick % 80;
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == c) {
-                strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));        //first pixel
-                strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //second pixel
-                strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + c) % 384));    //third pixel
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;
-    case 17: //3 spaced chasers --------------DAVIS
-        d = (color / MAX_COLORS) % MAX_STRIPES + 3; //chaser
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == j) {
-                strip.setPixelColor(i, c);
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;
-    case 18: //chasers + statics --------------DAVIS
-      //If you look up an RGB chart in Photoshop, just divide the values by 2 to arrive at the necessary input)
-      //int MAX_COLORS = 19;
-      //int MAX_MODES = 17;
-      //int MAX_STRIPES = 5;
-      //int color = 1
-      //I'm fucking with this because I don't really understand his math - it seems very convoluted.    
-
-                    //***ORIGINAL***
-//        d = (color / MAX_COLORS) % MAX_STRIPES + 2; //chaser, was +1, now +2
-//        c = strip.Color(20,127,104);       //hardcoded teal
-//        j = tick % (strip.numPixels()/d);
-//        for(i=0; i < strip.numPixels(); i++) {
-//            x = i % (strip.numPixels()/d);
-//            if((x == j) || (x == 0)) {
-//                strip.setPixelColor(i, c);
-//            }
-//            else {
-//                strip.setPixelColor(i, strip.Color(0,0,0));
-//            }
-//        }
-//        break;  
-
-      
-        d = 3; //chaser, was +1, now +2
-        c = strip.Color(20,127,104);       //hardcoded teal
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            x = i % (strip.numPixels()/d);
-            if((x == j) || (x == 0)) {
-                strip.setPixelColor(i, c);
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-        break;    
-    case 19: //3 spaced chasers, with filled in gaps --------------DAVIS
-        d = (color / MAX_COLORS) % MAX_STRIPES + 4; //chaser
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/d);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/d) == j) {
-                strip.setPixelColor(i, strip.Color(0,95,121));
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(50,10,100));
-            }
-        }
-        break; 
-//  case 20:  //random static colors
-//      unsigned long currentMillis = millis();
-//      if(currentMillis - previousMillis > interval) {
-//          previousMillis = currentMillis;
-//          for(int i = 0; i < strip.numPixels(); i++) {
-//              c = GetColor((color % MAX_COLORS) + random(6));
-//              strip.setPixelColor(i, c);
-//          }
-//          break;
-//          strip.show();
-//      }
-//      break;
-    }
-    strip.setPixelColor(strip.numPixels()-1, strip.Color(0,0,0)); //set that last LED off because it overlaps
-    strip.show();
-}
-
-void setup() {
-    // Start up the LED strip
-    strip.begin();
-
-    pinMode(powerPin, INPUT);    // declare pushbutton as input
-    pinMode(upModePin, INPUT);    // declare pushbutton as input
-    pinMode(upColorPin, INPUT);    // declare pushbutton as input
-    digitalWrite(powerPin, HIGH);
-    digitalWrite(upModePin, HIGH);
-    digitalWrite(upColorPin, HIGH);
-//triggerSleep();
-}
-
 void setup() {
   strip.begin();
-  strip.setBrightness(75);  // Lower brightness and save eyeballs OR NOT
+  strip.setBrightness(55);  // Lower brightness and save eyeballs OR NOT
   strip.show(); // Initialize all pixels to 'off'
 }
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  tick++;
-  rainbowChaser(15);
-  colorWipe(strip.Color(0,0,0), 100); // Black
+  connectingPixels(20);
+  //davisRandomChaser(15);
+  //  amandaColors(20);
+  //  rainbowCycle(15);
+  //  northSouthChaseFull(15);
+  //  rainbowFull(15);
+  //  rainbowDavis(15);
+  //  colorWave(7);
+  //  rainbowCycleNorthSouth(15);
+  //  colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
 
 // Fill the dots one after the other with a color
 void colorWipe(uint32_t c, uint8_t wait) {
-  for(uint16_t i=0; i<strip.numPixels(); i++) {
-      strip.setPixelColor(i, c);
+  for (uint16_t i = 0; i < strip.numPixels(); i++) {
+    strip.setPixelColor(i, c);
+    strip.show();
+    delay(wait);
+  }
+}
+
+int returnNumber(int number) {
+  return number;
+}
+
+
+void connectingPixels( uint8_t wait) {
+  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
+  int traceR, traceG, traceB, bgR, bgG, bgB;
+
+  northPixel = 150;                                                               // pixel at the top of the table
+  southPixel = 63;
+  westPixel = 108;                                                                // right side halfway point
+  eastPixel = 18;                                                                 // left side
+
+  traceR = rand() % 225 + 30;                                                     // re-roll the random dice every time a loop is completed
+  traceG = rand() % 225 + 30;
+  traceB = rand() % 225 + 30;
+
+  bgR = 0;
+  bgG = 0;
+  bgB = 0;
+
+  for (int cycle = 0; cycle < 512; cycle++) {
+    for (tick = 0; tick < 43; tick++) {                                           // overall loop
+
+      remainder = (northPixel + northWestCounter) - strip.numPixels();
+
+      /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
+      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
+       */
+
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+          strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
+        }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
+
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+      }
+
       strip.show();
       delay(wait);
+
+      northWestCounter++;
+      northEastCounter--;
+      southWestCounter--;
+      southEastCounter++;
+    }
+
+    for (tick = 0; tick < 43; tick++) {                                           // overall loop
+
+      remainder = (northPixel + northWestCounter) - strip.numPixels();
+
+      /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
+      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
+       */
+
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+          strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
+        }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
+
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else {
+          strip.setPixelColor(i, bgR, bgG, bgB);
+        }
+      }
+
+      strip.show();
+      delay(wait);
+
+      northWestCounter--;
+      northEastCounter++;
+      southWestCounter++;
+      southEastCounter--;
+    }
+
+    northEastCounter = 0;
+    northWestCounter = 0;
+    southEastCounter = 0;
+    southWestCounter = 0;
+
+    bgR = returnNumber(traceR);
+    bgG = returnNumber(traceG);
+    bgB = returnNumber(traceB);
+
+    traceR = rand() % 225 + 30;                                                   // re-roll the random dice every time a loop is completed
+    traceG = rand() % 225 + 30;
+    traceB = rand() % 225 + 30;
   }
+}
+
+
+// Experimenting with a chaser that bounces back and forth.
+// -Davis
+void davisRandomChaser(uint8_t wait) {
+  uint16_t i, j, tick, cycle;
+  cycle = 50; //how many times we'll do a full loop (forward and back)
+  for (tick = 0; tick < cycle; tick++) {
+
+    int randomRed = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 225 + 30;
+    int randomBlue = rand() % 225 + 30;
+
+    for (j = strip.numPixels(); j > 0; j--) {
+
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+
+    for (j = 0; j < strip.numPixels(); j++) {
+
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
+          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+  }
+
 }
 
 
@@ -594,8 +221,8 @@ void colorWipe(uint32_t c, uint8_t wait) {
 void rainbowCycle(uint8_t wait) {
   uint16_t i, j;
 
-  for(j=0; j<256*5; j++) { // 5 cycles of all colors on wheel
-    for(i=0; i< strip.numPixels(); i++) {
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+    for (i = 0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
     }
     strip.show();
@@ -605,57 +232,31 @@ void rainbowCycle(uint8_t wait) {
 
 // Input a value 0 to 255 to get a color value.
 // The colours are a transition r - g - b - back to r.
-// uint32_t Wheel(byte WheelPos) {
-//   if(WheelPos < 85) {
-//    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
-//   } else if(WheelPos < 170) {
-//    WheelPos -= 85;
-//    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
-//   } else {
-//    WheelPos -= 170;
-//    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
-//   }
-// }
-
-/**
-  * Chaser
-  */
-void rainbowChaser (uint8_t wait) {
-  uint32_t c, d, chaser;
-  uint16_t i, j, x, y;
-    
-    chaser = 3;
-    x = tick % 384;
-        c = GetColor(color % MAX_COLORS);       //color
-        j = tick % (strip.numPixels()/chaser);
-        for(i=0; i < strip.numPixels(); i++) {
-            if(i % (strip.numPixels()/chaser) == j) {
-                strip.setPixelColor(i, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));        //first pixel
-                strip.setPixelColor(i + 1, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));    //second pixel
-                strip.setPixelColor(i + 2, Wheel(((i * 384 / strip.numPixels() * (color%MAX_COLORS)) + x) % 384));
-            }
-            else {
-                strip.setPixelColor(i, strip.Color(0,0,0));
-            }
-        }
-    strip.setPixelColor(strip.numPixels()-1, strip.Color(0,0,0)); //set that last LED off because it overlaps
-    strip.show();
-    // delay(wait);
+uint32_t Wheel(byte WheelPos) {
+  if (WheelPos < 85) {
+    return strip.Color(WheelPos * 3, 255 - WheelPos * 3, 0);
+  } else if (WheelPos < 170) {
+    WheelPos -= 85;
+    return strip.Color(255 - WheelPos * 3, 0, WheelPos * 3);
+  } else {
+    WheelPos -= 170;
+    return strip.Color(0, WheelPos * 3, 255 - WheelPos * 3);
   }
+}
 
 /**
- *      ^   ^   ^  
+ *      ^   ^   ^
  * ~~~~~ ColorWave ~~~~~
- *        V   V   V   
+ *        V   V   V
  */
 void colorWave(uint8_t wait) {
   int i, j, stripsize, cycle;
   float ang, rsin, gsin, bsin, offset;
 
   static int tick = 0;
-  
+
   stripsize = strip.numPixels();
-  cycle = stripsize * 25; // times around the circle...
+  cycle = stripsize * 5; // times around the circle...
 
   while (++tick % cycle) {
     offset = map2PI(tick);
@@ -663,8 +264,8 @@ void colorWave(uint8_t wait) {
     for (i = 0; i < stripsize; i++) {
       ang = map2PI(i) - offset;
       rsin = sin(ang);
-      gsin = sin(2.0 * ang / 3.0 + map2PI(int(stripsize/6)));
-      bsin = sin(4.0 * ang / 5.0 + map2PI(int(stripsize/3)));
+      gsin = sin(2.0 * ang / 3.0 + map2PI(int(stripsize / 6)));
+      bsin = sin(4.0 * ang / 5.0 + map2PI(int(stripsize / 3)));
       strip.setPixelColor(i, strip.Color(trigScale(rsin), trigScale(gsin), trigScale(bsin)));
     }
 
@@ -676,7 +277,7 @@ void colorWave(uint8_t wait) {
 
 /**
  * Scale a value returned from a trig function to a byte value.
- * [-1, +1] -> [0, 254] 
+ * [-1, +1] -> [0, 254]
  * Note that we ignore the possible value of 255, for efficiency,
  * and because nobody will be able to differentiate between the
  * brightness levels of 254 and 255.
@@ -692,79 +293,642 @@ byte trigScale(float val) {
  * Map an integer so that [0, striplength] -> [0, 2PI]
  */
 float map2PI(int i) {
-  return PI*2.0*float(i) / float(strip.numPixels());
+  return PI * 2.0 * float(i) / float(strip.numPixels());
 }
 
-uint32_t Wheel(uint16_t WheelPos)
-{
-    byte r, g, b;
-    switch(WheelPos / 128)
-    {
-        case 0:
-        r = 127 - WheelPos % 128; // red down
-        g = WheelPos % 128;       // green up
-        b = 0;                    // blue off
-        break;
-        case 1:
-        g = 127 - WheelPos % 128; // green down
-        b = WheelPos % 128;       // blue up
-        r = 0;                    // red off
-        break;
-        case 2:
-        b = 127 - WheelPos % 128; // blue down
-        r = WheelPos % 128;       // red up
-        g = 0;                    // green off
-        break;
+void offsetChaser(uint16_t i, uint16_t j, uint16_t offset) {
+  uint16_t baseNum = i - offset;
+  strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  strip.setPixelColor(baseNum - 1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+}
+
+//I DONT KNOW WHAT IM DOING EXACTLY
+void davisChaser(uint8_t wait) {
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 2;
+  c = strip.numPixels();
+
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+
+    for (i = 0; i < strip.numPixels(); i++) {
+
+      if ((j * tickSpeed) % strip.numPixels() == i) {
+
+
+
+        offsetChaser(i, j, 0);
+        offsetChaser(i, j, 36);
+        offsetChaser(i, j, 72);
+        offsetChaser(i, j, 108);
+        offsetChaser(i, j, 144);
+        offsetChaser(i, j, 180);
+        offsetChaser(i, j, 216);
+
+      }
+      else {
+        strip.setPixelColor(i, 0, 0, 0); //black
+      }
     }
-    return(strip.Color(r,g,b));
+    strip.show();
+    delay(wait);
+  }
 }
 
-uint32_t GetColor(int c)
-{
-    switch(c) {
-        case 0:
-        return strip.Color(127,0,0);  //red
-        case 1:
-        return strip.Color(127,0,60);  
-        case 2:
-        return strip.Color(127,0,127); 
-    case 3:  //orange
-    return strip.Color(127,60,0);
-    case 4:  //yellow
-    return strip.Color(127,127,0);
+
+//I DONT KNOW WHAT IM DOING EXACTLY
+void rainbowDavis(uint8_t wait) {
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 2;
+  c = strip.numPixels();
+
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+
+    for (i = 0; i < strip.numPixels(); i++) {
+
+      if ((j * tickSpeed) % strip.numPixels() == i) {
+        offsetChaser(i, j, 0);
+        offsetChaser(i, j, 36);
+        offsetChaser(i, j, 72);
+        offsetChaser(i, j, 108);
+        offsetChaser(i, j, 144);
+        offsetChaser(i, j, 180);
+        offsetChaser(i, j, 216);
+
+      }
+      else {
+        strip.setPixelColor(i, 0, 0, 0); //black
+      }
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+void rainbowFull(uint8_t wait) {
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 1;
+  c = strip.numPixels();
+
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+
+    for (i = 0; i < strip.numPixels() * 2; i++) {
+
+      if ((j * tickSpeed) % strip.numPixels() == i) {
+        offsetChaser(i, j, 0);
+        offsetChaser(i, j, 36);
+        offsetChaser(i, j, 72);
+        offsetChaser(i, j, 108);
+        offsetChaser(i, j, 144);
+        offsetChaser(i, j, 180);
+        offsetChaser(i, j, 216);
+
+      }
+      else {
+        //strip.setPixelColor(i, 0, 0, 0); //black
+      }
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+
+//DAVIS
+void offsetChaserNorthSouth(uint16_t i, uint16_t j, uint16_t offset) {
+  uint16_t baseNum = i - offset;
+  if ((baseNum - 3) > 36 && baseNum < 90) { //36-90 seems to account for the South Array
+    strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  }
+  else if ((baseNum - 3) > 122) { //122 and up go to the end
+    strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+    strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
+  }
+  else {
+    strip.setPixelColor(i, 0, 0, 0); //black
+  }
+}
+
+//attempting to selectively light two tables sides, north and south
+void northSouthChaseFull(uint8_t wait) {
+  uint16_t i, j, c, tickSpeed;
+  tickSpeed = 2;
+  c = strip.numPixels();
+
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+
+    for (i = 0; i < strip.numPixels(); i++) {
+
+      if ((j * tickSpeed) % strip.numPixels() == i) {
+        offsetChaserNorthSouth(i, j, 0);
+        offsetChaserNorthSouth(i, j, 36);
+        offsetChaserNorthSouth(i, j, 72);
+
+      }
+      else {
+        //strip.setPixelColor(i, 0, 0, 0); //black
+      }
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+// Slightly different, this makes the rainbow equally distributed throughout
+void rainbowCycleNorthSouth(uint8_t wait) {
+  uint16_t i, j;
+
+  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
+    for (i = 0; i < strip.numPixels(); i++) {
+      if (i > 35 && i < 90) {
+        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+      }
+      else if (i > 122) {
+        strip.setPixelColor(0, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //a little hacky, but 122+, and 0-1, are necessary for North Side
+        strip.setPixelColor(1, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
+      }
+      else {
+        strip.setPixelColor(i, 0, 0, 0); //black
+      }
+    }
+    strip.show();
+    delay(wait);
+  }
+}
+
+int* amandaColorHolder(int selection) {
+
+  int* pRgb;
+
+  switch (selection) {
+    case 0:
+      {
+        int rgb[3] = {255, 0, 0}; //red
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 1:
+      {
+        int rgb[3] = {255, 25, 25};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 2:
+      {
+        int rgb[3] = {255, 48, 48};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 3:
+      {
+        int rgb[3] = {255, 89, 89};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 4:
+      {
+        int rgb[3] = {255, 122, 122};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 5:
-    return strip.Color(127,127,60);
+      {
+        int rgb[3] = {255, 162, 162};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 6:
-    return strip.Color(60,127,0);
+      {
+        int rgb[3] = {255, 162, 162};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 7:
-    return strip.Color(60,127,127);
+      {
+        int rgb[3] = {255, 204, 204}; //pink
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 8:
-    return strip.Color(60,60,127);
+      {
+        int rgb[3] = {255, 204, 255};
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 9:
-    return strip.Color(60,90,60);
+      {
+        int rgb[3] = {255, 153, 255}; //periwinkle pink
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 10:
-    return strip.Color(60,60,0);
+      {
+        int rgb[3] = {255, 102, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
     case 11:
-        return strip.Color(0,0,127);  //blue
-        case 12:
-        return strip.Color(0,60,127);
-        case 13:
-        return strip.Color(0,127,127);
-        case 14:
-        return strip.Color(0,127,0);  //green
-        case 15:
-        return strip.Color(127,30,10);
-        case 16:
-        return strip.Color(25,80,100);
-        case 17:
-        return strip.Color(127,127,127);  //White
-        case 18:
-        int r, g, b;
-        r = random(0, 50);
-        g = random(40, 90);
-        b = random(80, 128);
-        return strip.Color(r,g,b);
-        default:
-        return strip.Color(0,0,0);
+      {
+        int rgb[3] = {255, 0, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 12:
+      {
+        int rgb[3] = {255, 51, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 13:
+      {
+        int rgb[3] = {255, 51, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 14:
+      {
+        int rgb[3] = {255, 0, 102}; // tangerine
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 15:
+      {
+        int rgb[3] = {255, 80, 80}; // orange
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 16:
+      {
+        int rgb[3] = {255, 102, 0}; // orange
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 17:
+      {
+        int rgb[3] = {255, 153, 51}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 18:
+      {
+        int rgb[3] = {255, 204, 0}; //golden
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 19:
+      {
+        int rgb[3] = {255, 255, 0}; //yellow
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 20:
+      {
+        int rgb[3] = {255, 255, 102}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 21:
+      {
+        int rgb[3] = {255, 255, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 22:
+      {
+        int rgb[3] = {255, 255, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 23:
+      {
+        int rgb[3] = {204, 255, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 24:
+      {
+        int rgb[3] = {153, 255, 102}; // light green
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 25:
+      {
+        int rgb[3] = {102, 255, 102}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 26:
+      {
+        int rgb[3] = {0, 255, 0}; //lime green
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 27:
+      {
+        int rgb[3] = {0, 204, 0}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 28:
+      {
+        int rgb[3] = {0, 204, 102}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 29:
+      {
+        int rgb[3] = {0, 204, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 30:
+      {
+        int rgb[3] = {77, 219, 184}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 31:
+      {
+        int rgb[3] = {0, 153, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 32:
+      {
+        int rgb[3] = {0, 102, 153}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 33:
+      {
+        int rgb[3] = {0, 153, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 34:
+      {
+        int rgb[3] = {0, 102, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 35:
+      {
+        int rgb[3] = {0, 51, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 36:
+      {
+        int rgb[3] = {0, 0, 255}; // blue
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 37:
+      {
+        int rgb[3] = {51, 51, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 38:
+      {
+        int rgb[3] = {51, 102, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 39:
+      {
+        int rgb[3] = {102, 153, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 40:
+      {
+        int rgb[3] = {153, 204, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 41:
+      {
+        int rgb[3] = {204, 204, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 42:
+      {
+        int rgb[3] = {204, 153, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 43:
+      {
+        int rgb[3] = {204, 102, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 44:
+      {
+        int rgb[3] = {204, 51, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 45:
+      {
+        int rgb[3] = {204, 0, 255}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 46:
+      {
+        int rgb[3] = {153, 0, 204}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 47:
+      {
+        int rgb[3] = {102, 0, 102}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 48:
+      {
+        int rgb[3] = {92, 0, 92}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 49:
+      {
+        int rgb[3] = {74, 0, 74}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 50:
+      {
+        int rgb[3] = {44, 0, 44}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 51:
+      {
+        int rgb[3] = {22, 0, 22}; //
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    case 52:
+      {
+        int rgb[3] = {0, 0, 0}; //black
+        pRgb = rgb;
+        return pRgb;
+        break;
+      }
+    default:
+      {
+        int rgb[3] = {0, 0, 0}; //black
+        pRgb = rgb;
+        return pRgb;
+      }
+  }
+}
+
+/*  Amanda's Custom Color Sequence, with automatic RGB value blending!
+ *
+ *  The following is a cheap way of incrementing/decrementing RGB values
+ *  in order to produce a blending effect. We set the target RGB to pEndcolor,
+ *  which is an array with 3 values [R, G, B]. The program will step through
+ *  our r,g, and b variables and check them against the target. If the target value
+ *  is greater than the current value, we increment the current value and check it again on the next loop.
+ *
+ *  When r,g, and b are equal to pEndColor[R,G,B]
+ *  we increment the caseNum variable (passed to amandaColorHolder), which gives us our next target.
+ *
+ *  Notes: This isn't a mathematically perfect way of fading between colors. ¯\_(ツ)_/¯
+ *
+ *  Example of limitation:
+ *
+ *  Going from (255, 20, 20) to (255, 0, 0) will take twenty iterations.
+ *  Going from (255, 255, 255) to (255, 0, 0) will take two hundred fifty five iterations.
+ *  This means there is a time variance (colors appear for different lengths of time,
+ *  depending on their RGB distance from the next value)
+ *
+ *  This can lead to flickering sequences with color values that are too close together.
+ *
+ *  -Davis Ford, 7/6/2015
+ */
+
+void amandaColors(uint8_t wait) {
+  uint16_t i, j, caseNum;
+  int * pStartColor, * pEndColor; //credit to Matthew Ibarra (pengii23) for figuring out my pointers
+  pStartColor = amandaColorHolder(0); //initializes with case 0 (red)
+  pEndColor = amandaColorHolder(1); //sets up the target values
+  int r = pStartColor[0]; //since our first case is red, r = 255
+  int b = pStartColor[1]; //0
+  int g = pStartColor[2]; //0
+
+
+  for (j = 0; j < 256 * 10; j++) {
+
+    if (caseNum > 51) { //52 cases above in amandaColorHolder
+      caseNum = 0;
     }
+
+    if (r < pEndColor[0]) {
+      r++;
+    }
+    else if (r > pEndColor[0]) {
+      r--;
+    }
+
+
+    if (g < pEndColor[1]) {
+      g++;
+    }
+    else if (g > pEndColor[1]) {
+      g--;
+    }
+
+    if (b < pEndColor[2]) {
+      b++;
+    }
+    else if (b > pEndColor[2]) {
+      b--;
+    }
+
+    /*
+    * Set all pixels on the strip to the current r,g,b values
+    */
+    for (i = 0; i < strip.numPixels(); i++) {
+      strip.setPixelColor(i, r, g, b);
+    }
+
+    strip.show();
+    delay(wait);
+
+    /*  Check to see if r,g,b are equal to our target values.
+     *  If they are, increment caseNum (gives us a new target value)
+     *  and assign the new [R,G,B] values to pEndColor.
+     */
+    if (r == pEndColor[0] && g == pEndColor[1] && b == pEndColor[2]) {
+      caseNum++;
+      pEndColor = amandaColorHolder(caseNum);
+    }
+
+  }
 }

@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisConnectingPixels(20);
+  connectingPixels(20);
   davisRandomChaser(15);
   amandaColors(20);
   rainbowCycle(15);
@@ -47,25 +47,25 @@ int returnNumber(int number) {
 }
 
 
-void davisConnectingPixels( uint8_t wait) {
+void connectingPixels( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
   int traceR, traceG, traceB, bgR, bgG, bgB;
 
-  northPixel = 150;//pixel at the top of the tabke
+  northPixel = 150;                                                               // pixel at the top of the table
   southPixel = 63;
-  westPixel = 108; //right side halfway point
-  eastPixel = 18; //left side
+  westPixel = 108;                                                                // right side halfway point
+  eastPixel = 18;                                                                 // left side
 
-  traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+  traceR = rand() % 225 + 30;                                                     // re-roll the random dice every time a loop is completed
   traceG = rand() % 225 + 30;
   traceB = rand() % 225 + 30;
 
-  bgR = 0; //re-roll the random dice every time a loop is completed
+  bgR = 0;
   bgG = 0;
   bgB = 0;
 
   for (int cycle = 0; cycle < 100; cycle++) {
-    for (tick = 0; tick < 43; tick++) { //overall loop
+    for (tick = 0; tick < 43; tick++) { //iterates through one sequence of extending tracers to the nearest adjacent pixel point loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -108,6 +108,49 @@ void davisConnectingPixels( uint8_t wait) {
       southEastCounter++;
     }
 
+    for (tick = 0; tick < 43; tick++) {                                           // one loop around the table
+
+      remainder = (northPixel + northWestCounter) - strip.numPixels();
+
+      /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
+      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
+       */
+
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+          strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
+        }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
+
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else {
+          //strip.setPixelColor(i, bgR, bgG, bgB);
+        }
+      }
+
+      strip.show();
+      delay(wait);
+
+      northWestCounter--;
+      northEastCounter++;
+      southWestCounter++;
+      southEastCounter--;
+    }
+
     northEastCounter = 0;
     northWestCounter = 0;
     southEastCounter = 0;
@@ -117,7 +160,7 @@ void davisConnectingPixels( uint8_t wait) {
     bgG = returnNumber(traceG);
     bgB = returnNumber(traceB);
 
-    traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+    traceR = rand() % 225 + 30;                                                   // re-roll the random dice every time a loop is completed
     traceG = rand() % 225 + 30;
     traceB = rand() % 225 + 30;
   }
