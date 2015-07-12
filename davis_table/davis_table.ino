@@ -21,7 +21,7 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   davisConnectingPixels(20);
-  //  davisRandomChaser(15);
+    davisRandomChaser(15);
   //  amandaColors(20);
   //  rainbowCycle(15);
   //  northSouthChaseFull(15);
@@ -42,6 +42,11 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
+int returnNumber(int number) {
+  return number;
+}
+
+
 void davisConnectingPixels( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
   int traceR, traceG, traceB, bgR, bgG, bgB;
@@ -58,6 +63,7 @@ void davisConnectingPixels( uint8_t wait) {
   bgR = 0; //re-roll the random dice every time a loop is completed
   bgG = 0;
   bgB = 0;
+
 
   for (tick = 0; tick <  75; tick++) { //overall loop
 
@@ -108,16 +114,14 @@ void davisConnectingPixels( uint8_t wait) {
       southEastCounter = 0;
       southWestCounter = 0;
 
-      bgR = traceR;
-      bgG = traceG;
-      bgB = traceB;
+      bgR = returnNumber(traceR);
+      bgG = returnNumber(traceG);
+      bgB = returnNumber(traceB);
 
       traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
       traceG = rand() % 225 + 30;
       traceB = rand() % 225 + 30;
-
     }
-
   }
 }
 
