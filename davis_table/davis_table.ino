@@ -55,33 +55,11 @@ void davisConnectingPixels( uint8_t wait) {
   traceG = rand() % 225 + 30;
   traceB = rand() % 225 + 30;
 
-  bgR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
-  bgG = rand() % 225 + 30;
-  bgB = rand() % 225 + 30;
+  bgR = 0; //re-roll the random dice every time a loop is completed
+  bgG = 0;
+  bgB = 0;
 
   for (tick = 0; tick <  75; tick++) { //overall loop
-
-    if (northEastCounter < 43) { //close the gap between the middle of each side
-      northWestCounter++;
-      northEastCounter--;
-      southWestCounter--;
-      southEastCounter++;
-    }
-    else {
-      northEastCounter = 0;
-      northWestCounter = 0;
-      southEastCounter = 0;
-      southWestCounter = 0;
-
-      bgR = traceR;
-      bgG = traceG;
-      bgB = traceB;
-
-      traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
-  traceG = rand() % 225 + 30;
-  traceB = rand() % 225 + 30;
-
-    }
 
     remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -105,10 +83,10 @@ void davisConnectingPixels( uint8_t wait) {
         strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
-       strip.setPixelColor(i, traceR, traceG, traceB);
+        strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
-       strip.setPixelColor(i, traceR, traceG, traceB);
+        strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else {
         strip.setPixelColor(i, bgR, bgG, bgB);
@@ -118,11 +96,29 @@ void davisConnectingPixels( uint8_t wait) {
     strip.show();
     delay(wait);
 
+    if (northEastCounter < 43) { //close the gap between the middle of each side
+      northWestCounter++;
+      northEastCounter--;
+      southWestCounter--;
+      southEastCounter++;
+    }
+    else {
+      northEastCounter = 0;
+      northWestCounter = 0;
+      southEastCounter = 0;
+      southWestCounter = 0;
+
+      bgR = traceR;
+      bgG = traceG;
+      bgB = traceB;
+
+      traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+      traceG = rand() % 225 + 30;
+      traceB = rand() % 225 + 30;
+
+    }
 
   }
-
-
-
 }
 
 
