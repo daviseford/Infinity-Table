@@ -21,15 +21,15 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   connectingPixels(20);
-  davisRandomChaser(15);
-  amandaColors(20);
-  rainbowCycle(15);
-  northSouthChaseFull(15);
-  rainbowFull(15);
-  rainbowDavis(15);
-  colorWave(7);
-  rainbowCycleNorthSouth(15);
-  colorWipe(strip.Color(0, 0, 0), 100); // Black
+  //davisRandomChaser(15);
+  //  amandaColors(20);
+  //  rainbowCycle(15);
+  //  northSouthChaseFull(15);
+  //  rainbowFull(15);
+  //  rainbowDavis(15);
+  //  colorWave(7);
+  //  rainbowCycleNorthSouth(15);
+  //  colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
 
@@ -64,8 +64,8 @@ void connectingPixels( uint8_t wait) {
   bgG = 0;
   bgB = 0;
 
-  for (int cycle = 0; cycle < 100; cycle++) {
-    for (tick = 0; tick < 43; tick++) { //iterates through one sequence of extending tracers to the nearest adjacent pixel point loop
+  for (int cycle = 0; cycle < 512; cycle++) {
+    for (tick = 0; tick < 43; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -74,16 +74,16 @@ void connectingPixels( uint8_t wait) {
       * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
        */
 
-      for (i = 0; i < strip.numPixels(); i++) { //led update loop
-        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (i <= northPixel + northWestCounter && i > northPixel ) { //start sending a red wave out from the northPixel, +1 every tick
+        else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) { //if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
-          strip.setPixelColor(i, traceR, traceG, traceB);                              //fill up to the remainder (which will be between 0-18)
-        }                                                                         //this is just to handle going from LED 174 -> 0 -> 1 -> etc
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+          strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
+        }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
 
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
@@ -93,9 +93,6 @@ void connectingPixels( uint8_t wait) {
         }
         else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
-        }
-        else {
-          strip.setPixelColor(i, bgR, bgG, bgB);
         }
       }
 
@@ -108,7 +105,7 @@ void connectingPixels( uint8_t wait) {
       southEastCounter++;
     }
 
-    for (tick = 0; tick < 43; tick++) {                                           // one loop around the table
+    for (tick = 0; tick < 43; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -138,7 +135,7 @@ void connectingPixels( uint8_t wait) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
         else {
-          //strip.setPixelColor(i, bgR, bgG, bgB);
+          strip.setPixelColor(i, bgR, bgG, bgB);
         }
       }
 
