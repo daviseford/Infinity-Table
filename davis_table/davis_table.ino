@@ -21,7 +21,7 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   davisConnectingPixels(20);
-    davisRandomChaser(15);
+    //davisRandomChaser(15);
   //  amandaColors(20);
   //  rainbowCycle(15);
   //  northSouthChaseFull(15);
@@ -64,8 +64,8 @@ void davisConnectingPixels( uint8_t wait) {
   bgG = 0;
   bgB = 0;
 
-
-  for (tick = 0; tick <  75; tick++) { //overall loop
+  for (int cycle =0; cycle < 512; cycle++) {
+  for (tick = 0; tick < 43; tick++) { //overall loop
 
     remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -102,13 +102,12 @@ void davisConnectingPixels( uint8_t wait) {
     strip.show();
     delay(wait);
 
-    if (northEastCounter < 43) { //close the gap between the middle of each side
       northWestCounter++;
       northEastCounter--;
       southWestCounter--;
       southEastCounter++;
-    }
-    else {
+          }
+          
       northEastCounter = 0;
       northWestCounter = 0;
       southEastCounter = 0;
@@ -121,7 +120,6 @@ void davisConnectingPixels( uint8_t wait) {
       traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
       traceG = rand() % 225 + 30;
       traceB = rand() % 225 + 30;
-    }
   }
 }
 
