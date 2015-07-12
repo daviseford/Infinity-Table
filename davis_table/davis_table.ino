@@ -52,7 +52,7 @@ void davisConnectingPixels( uint8_t wait) {
 
   for (tick = 0; tick <  75; tick++) { //overall loop
 
-    if (northWestCounter < 42) {
+    if (northEastCounter < 43) {
       northWestCounter++;
       northEastCounter--;
       southWestCounter--;
@@ -76,13 +76,13 @@ void davisConnectingPixels( uint8_t wait) {
       if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
         strip.setPixelColor(i, 255, 0, 0);
       }
-      else if (i <= northPixel + northWestCounter && i > northPixel ) {
+      else if (i <= northPixel + northWestCounter && i > northPixel ) { //start sending a red wave out from the northPixel, +1 every tick
         strip.setPixelColor(i, 255, 0, 0);
       }
-      else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {
-        strip.setPixelColor(i, 255, 0, 0);
-
-      }
+      else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) { //if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+        strip.setPixelColor(i, 255, 0, 0);                                     //fill up to the remainder (which will be between 0-18)
+      }                                                                         //this is just to handle going from LED 174 -> 0 -> 1 -> etc
+      
       else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
         strip.setPixelColor(i, 255, 0, 0);
       }
