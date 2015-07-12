@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  testPixels(20);
+  davisTestPixels(2000);
   //  davisRandomChaser(15);
   //  amandaColors(20);
   //  rainbowCycle(15);
@@ -42,17 +42,66 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
-void testPixels( uint8_t wait) {
-  uint16_t i;
-  for (i = 0; i < strip.numPixels(); i++) {
-    if (i == 63 || i == 150) {
-      strip.setPixelColor(i, 255, 0, 0);
+void davisTestPixels( uint8_t wait) {
+  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter;
+  int northPixel, southPixel, eastPixel, westPixel;
+
+  northPixel = 150;//pixel at the top of the tabke
+  southPixel = 63;
+  westPixel = 108; //right side halfway point
+  eastPixel = 18; //left side
+
+  for (looper = 0; looper < 256 * 20; looper++) {
+    for (tick = 0; tick <  75; tick++) { //overall loop
+
+      if (northEastCounter < 72) {
+        northEastCounter++;
+        northWestCounter--;
+        southEastCounter--;
+        southWestCounter++;
+      }
+      else {
+        northEastCounter = 0;
+        northWestCounter = 0;
+        southEastCounter = 0;
+        southWestCounter = 0;
+      }
+      
+      int remainder = (northPixel + northEastCounter) - strip.numPixels();
+
+      for (i = 0; i < strip.numPixels(); i++) { //led update loop
+        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for nrth/south
+          strip.setPixelColor(i, 255, 0, 0);
+        }
+        else if (i <= northPixel + northEastCounter && i > northPixel ) {
+          strip.setPixelColor(i, 255, 0, 0);
+        }
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {
+          strip.setPixelColor(i, 255, 0, 0);
+
+        }
+        else if (i >= northPixel + northWestCounter && i <= northPixel && i >= westPixel) {
+          strip.setPixelColor(i, 255, 0, 0);
+        }
+        else if (i >= southPixel + southEastCounter && i <= southPixel && i >= eastPixel) {
+          strip.setPixelColor(i, 255, 0, 0);
+        }
+        else if (i <= southPixel + southWestCounter && i >= southPixel && i <= westPixel) {
+          strip.setPixelColor(i, 255, 0, 0);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 130);
+        }
+      }
+
       strip.show();
       delay(wait);
+
+
     }
-    else {
-      strip.setPixelColor(i, 0, 0, 0);
-    }
+
+    
+    
   }
 }
 
