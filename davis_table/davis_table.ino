@@ -21,15 +21,15 @@ void setup() {
 void loop() {
   // Some example procedures showing how to display to the pixels:
   connectingPixels(20);
-  //davisRandomChaser(15);
-  //  amandaColors(20);
-  //  rainbowCycle(15);
-  //  northSouthChaseFull(15);
-  //  rainbowFull(15);
-  //  rainbowDavis(15);
-  //  colorWave(7);
-  //  rainbowCycleNorthSouth(15);
-  //  colorWipe(strip.Color(0, 0, 0), 100); // Black
+  davisRandomChaser(15);
+  amandaColors(20);
+  rainbowCycle(15);
+  northSouthChaseFull(15);
+  rainbowFull(15);
+  rainbowDavis(15);
+  colorWave(7);
+  rainbowCycleNorthSouth(15);
+  colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
 
@@ -53,18 +53,24 @@ void connectingPixels( uint8_t wait) {
 
   northPixel = 150;                                                               // pixel at the top of the table
   southPixel = 63;
-  westPixel = 108;                                                                // right side halfway point
-  eastPixel = 18;                                                                 // left side
+  eastPixel = 108;                                                                // right side halfway point
+  westPixel = 18;                                                                 // left side
 
   traceR = rand() % 225 + 30;                                                     // re-roll the random dice every time a loop is completed
   traceG = rand() % 225 + 30;
   traceB = rand() % 225 + 30;
 
-  bgR = 0;
+  bgR = 0; //initialize these values to whatever you want
   bgG = 0;
   bgB = 0;
 
-  for (int cycle = 0; cycle < 512; cycle++) {
+  /* this loop controls the number of times the full sequence will run.
+   * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
+   * tracers are then deployed towards east and west ends of the table.
+   * a sequence ends when the tracers return to their starting position and a new RGB value is generated
+   * set cycle to 50 to see this effect 50 times, for example
+   */
+  for (int cycle = 0; cycle < 30; cycle++) {
     for (tick = 0; tick < 43; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
@@ -81,17 +87,17 @@ void connectingPixels( uint8_t wait) {
         else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= westPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
           strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
         }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
 
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= westPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
       }
@@ -105,7 +111,7 @@ void connectingPixels( uint8_t wait) {
       southEastCounter++;
     }
 
-    for (tick = 0; tick < 43; tick++) {                                           // overall loop
+    for (tick = 0; tick < 43; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -121,17 +127,17 @@ void connectingPixels( uint8_t wait) {
         else if (i <= northPixel + northWestCounter && i > northPixel ) {         // start sending a red wave out from the northPixel, +1 every tick
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
+        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= westPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
           strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
         }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
 
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+        else if (i >= southPixel + southWestCounter && i <= southPixel && i >= westPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
         else {
