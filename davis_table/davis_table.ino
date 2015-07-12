@@ -43,16 +43,25 @@ void colorWipe(uint32_t c, uint8_t wait) {
 }
 
 void davisConnectingPixels( uint8_t wait) {
-  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel;
+  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
+  int traceR, traceG, traceB, bgR, bgG, bgB;
 
   northPixel = 150;//pixel at the top of the tabke
   southPixel = 63;
   westPixel = 108; //right side halfway point
   eastPixel = 18; //left side
 
+  traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+  traceG = rand() % 225 + 30;
+  traceB = rand() % 225 + 30;
+
+  bgR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+  bgG = rand() % 225 + 30;
+  bgB = rand() % 225 + 30;
+
   for (tick = 0; tick <  75; tick++) { //overall loop
 
-    if (northEastCounter < 43) {
+    if (northEastCounter < 43) { //close the gap between the middle of each side
       northWestCounter++;
       northEastCounter--;
       southWestCounter--;
@@ -63,37 +72,46 @@ void davisConnectingPixels( uint8_t wait) {
       northWestCounter = 0;
       southEastCounter = 0;
       southWestCounter = 0;
+
+      bgR = traceR;
+      bgG = traceG;
+      bgB = traceB;
+
+      traceR = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
+  traceG = rand() % 225 + 30;
+  traceB = rand() % 225 + 30;
+
     }
 
-    int remainder = (northPixel + northWestCounter) - strip.numPixels(); 
-    
-    /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0. 
-    * So, we add our counter and starting position (northPixel), and subtract the number of LEDs. 
+    remainder = (northPixel + northWestCounter) - strip.numPixels();
+
+    /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
+    * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
     * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
      */
 
     for (i = 0; i < strip.numPixels(); i++) { //led update loop
       if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
-        strip.setPixelColor(i, 255, 0, 0);
+        strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (i <= northPixel + northWestCounter && i > northPixel ) { //start sending a red wave out from the northPixel, +1 every tick
-        strip.setPixelColor(i, 255, 0, 0);
+        strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) { //if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
-        strip.setPixelColor(i, 255, 0, 0);                                     //fill up to the remainder (which will be between 0-18)
+        strip.setPixelColor(i, traceR, traceG, traceB);                              //fill up to the remainder (which will be between 0-18)
       }                                                                         //this is just to handle going from LED 174 -> 0 -> 1 -> etc
-      
+
       else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
-        strip.setPixelColor(i, 255, 0, 0);
+        strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
-        strip.setPixelColor(i, 255, 0, 0);
+       strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
-        strip.setPixelColor(i, 255, 0, 0);
+       strip.setPixelColor(i, traceR, traceG, traceB);
       }
       else {
-        strip.setPixelColor(i, 0, 0, 130);
+        strip.setPixelColor(i, bgR, bgG, bgB);
       }
     }
 
