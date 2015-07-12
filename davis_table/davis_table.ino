@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisTestPixels(2000);
+  davisConnectingPixels(20);
   //  davisRandomChaser(15);
   //  amandaColors(20);
   //  rainbowCycle(15);
@@ -42,68 +42,71 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
-void davisTestPixels( uint8_t wait) {
-  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter;
-  int northPixel, southPixel, eastPixel, westPixel;
+void davisConnectingPixels( uint8_t wait) {
+  int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel;
 
   northPixel = 150;//pixel at the top of the tabke
   southPixel = 63;
   westPixel = 108; //right side halfway point
   eastPixel = 18; //left side
 
-  for (looper = 0; looper < 256 * 20; looper++) {
-    for (tick = 0; tick <  75; tick++) { //overall loop
+  for (tick = 0; tick <  75; tick++) { //overall loop
 
-      if (northEastCounter < 72) {
-        northEastCounter++;
-        northWestCounter--;
-        southEastCounter--;
-        southWestCounter++;
-      }
-      else {
-        northEastCounter = 0;
-        northWestCounter = 0;
-        southEastCounter = 0;
-        southWestCounter = 0;
-      }
-      
-      int remainder = (northPixel + northEastCounter) - strip.numPixels();
-
-      for (i = 0; i < strip.numPixels(); i++) { //led update loop
-        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for nrth/south
-          strip.setPixelColor(i, 255, 0, 0);
-        }
-        else if (i <= northPixel + northEastCounter && i > northPixel ) {
-          strip.setPixelColor(i, 255, 0, 0);
-        }
-        else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {
-          strip.setPixelColor(i, 255, 0, 0);
-
-        }
-        else if (i >= northPixel + northWestCounter && i <= northPixel && i >= westPixel) {
-          strip.setPixelColor(i, 255, 0, 0);
-        }
-        else if (i >= southPixel + southEastCounter && i <= southPixel && i >= eastPixel) {
-          strip.setPixelColor(i, 255, 0, 0);
-        }
-        else if (i <= southPixel + southWestCounter && i >= southPixel && i <= westPixel) {
-          strip.setPixelColor(i, 255, 0, 0);
-        }
-        else {
-          strip.setPixelColor(i, 0, 0, 130);
-        }
-      }
-
-      strip.show();
-      delay(wait);
-
-
+    if (northWestCounter < 42) {
+      northWestCounter++;
+      northEastCounter--;
+      southWestCounter--;
+      southEastCounter++;
+    }
+    else {
+      northEastCounter = 0;
+      northWestCounter = 0;
+      southEastCounter = 0;
+      southWestCounter = 0;
     }
 
+    int remainder = (northPixel + northWestCounter) - strip.numPixels(); 
     
-    
+    /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0. 
+    * So, we add our counter and starting position (northPixel), and subtract the number of LEDs. 
+    * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
+     */
+
+    for (i = 0; i < strip.numPixels(); i++) { //led update loop
+      if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
+        strip.setPixelColor(i, 255, 0, 0);
+      }
+      else if (i <= northPixel + northWestCounter && i > northPixel ) {
+        strip.setPixelColor(i, 255, 0, 0);
+      }
+      else if (remainder >= 0 && i >= 0 && i <= remainder && i <= eastPixel) {
+        strip.setPixelColor(i, 255, 0, 0);
+
+      }
+      else if (i >= northPixel + northEastCounter && i <= northPixel && i >= westPixel) {
+        strip.setPixelColor(i, 255, 0, 0);
+      }
+      else if (i >= southPixel + southWestCounter && i <= southPixel && i >= eastPixel) {
+        strip.setPixelColor(i, 255, 0, 0);
+      }
+      else if (i <= southPixel + southEastCounter && i >= southPixel && i <= westPixel) {
+        strip.setPixelColor(i, 255, 0, 0);
+      }
+      else {
+        strip.setPixelColor(i, 0, 0, 130);
+      }
+    }
+
+    strip.show();
+    delay(wait);
+
+
   }
+
+
+
 }
+
 
 // Experimenting with a chaser that bounces back and forth.
 // -Davis
