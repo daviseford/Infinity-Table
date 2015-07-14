@@ -14,7 +14,7 @@ Adafruit_NeoPixel strip = Adafruit_NeoPixel(STRIPSIZE, PINdroite, NEO_GRB + NEO_
 
 void setup() {
   strip.begin();
-  strip.setBrightness(55);  // Lower brightness and save eyeballs OR NOT
+  strip.setBrightness(55);  // Lower brightness and save eyeballs
   strip.show(); // Initialize all pixels to 'off'
 }
 
@@ -25,11 +25,9 @@ void loop() {
   davisRandomChaser(15);
   amandaColors(20);
   rainbowCycle(15);
-  northSouthChaseFull(15);
   rainbowFull(15);
   rainbowDavis(15);
-  colorWave(7);
-  rainbowCycleNorthSouth(15);
+  colorWave(13);
   colorWipe(strip.Color(0, 0, 0), 100); // Black
 
 }
@@ -57,9 +55,9 @@ void connectingPixels( uint8_t wait) {
   eastPixel = 108;                                                                // right side halfway point
   westPixel = 18;                                                                 // left side
 
-  traceR = rand() % 225 + 30;                                                     // re-roll the random dice every time a loop is completed
-  traceG = rand() % 225 + 30;
-  traceB = rand() % 225 + 30;
+  traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+  traceG = rand() % 255;
+  traceB = rand() % 255;
 
   bgR = 0; //initialize these values to whatever you want
   bgG = 0;
@@ -164,9 +162,9 @@ void connectingPixels( uint8_t wait) {
     bgG = returnNumber(traceG);
     bgB = returnNumber(traceB);
 
-    traceR = rand() % 225 + 30;                                                   // re-roll the random dice every time a loop is completed
-    traceG = rand() % 225 + 30;
-    traceB = rand() % 225 + 30;
+    traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+    traceG = rand() % 255;
+    traceB = rand() % 255;
   }
 }
 
@@ -180,9 +178,9 @@ void connectingPixelsBlack( uint8_t wait) {
   eastPixel = 108;                                                                // right side halfway point
   westPixel = 18;                                                                 // left side
 
-  traceR = rand() % 225 + 30;                                                     // re-roll the random dice every time a loop is completed
-  traceG = rand() % 225 + 30;
-  traceB = rand() % 225 + 30;
+  traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+  traceG = rand() % 255;
+  traceB = rand() % 255;
 
   bgR = 0; //initialize these values to whatever you want
   bgG = 0;
@@ -287,9 +285,9 @@ void connectingPixelsBlack( uint8_t wait) {
     bgG = returnNumber(traceG);
     bgB = returnNumber(traceB);
 
-    traceR = rand() % 225 + 30;                                                   // re-roll the random dice every time a loop is completed
-    traceG = rand() % 225 + 30;
-    traceB = rand() % 225 + 30;
+    traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+    traceG = rand() % 255;
+    traceB = rand() % 255;
   }
 }
 
@@ -297,12 +295,12 @@ void connectingPixelsBlack( uint8_t wait) {
 // -Davis
 void davisRandomChaser(uint8_t wait) {
   uint16_t i, j, tick, cycle;
-  cycle = 25; //how many times we'll do a full loop (forward and back)
+  cycle = 15; //how many times we'll do a full loop (forward and back)
   for (tick = 0; tick < cycle; tick++) {
 
-    int randomRed = rand() % 225 + 30; //re-roll the random dice every time a loop is completed
-    int randomGreen = rand() % 225 + 30;
-    int randomBlue = rand() % 225 + 30;
+    int randomRed = rand() % 255; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 255;
+    int randomBlue = rand() % 255;
 
     for (j = strip.numPixels(); j > 0; j--) {
 
@@ -385,7 +383,7 @@ void colorWave(uint8_t wait) {
   static int tick = 0;
 
   stripsize = strip.numPixels();
-  cycle = stripsize * 5; // times around the circle...
+  cycle = stripsize * 7; // times around the circle...
 
   while (++tick % cycle) {
     offset = map2PI(tick);
@@ -432,36 +430,6 @@ void offsetChaser(uint16_t i, uint16_t j, uint16_t offset) {
   strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
   strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
 }
-
-//I DONT KNOW WHAT IM DOING EXACTLY
-void davisChaser(uint8_t wait) {
-  uint16_t i, j, c, tickSpeed;
-  tickSpeed = 2;
-  c = strip.numPixels();
-
-  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
-
-    for (i = 0; i < strip.numPixels(); i++) {
-
-      if ((j * tickSpeed) % strip.numPixels() == i) {
-        offsetChaser(i, j, 0);
-        offsetChaser(i, j, 36);
-        offsetChaser(i, j, 72);
-        offsetChaser(i, j, 108);
-        offsetChaser(i, j, 144);
-        offsetChaser(i, j, 180);
-        offsetChaser(i, j, 216);
-
-      }
-      else {
-        strip.setPixelColor(i, 0, 0, 0); //black
-      }
-    }
-    strip.show();
-    delay(wait);
-  }
-}
-
 
 //I DONT KNOW WHAT IM DOING EXACTLY
 void rainbowDavis(uint8_t wait) {
@@ -520,74 +488,6 @@ void rainbowFull(uint8_t wait) {
   }
 }
 
-
-//DAVIS
-void offsetChaserNorthSouth(uint16_t i, uint16_t j, uint16_t offset) {
-  uint16_t baseNum = i - offset;
-  if ((baseNum - 3) > 36 && baseNum < 90) { //36-90 seems to account for the South Array
-    strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-  }
-  else if ((baseNum - 3) > 122) { //122 and up go to the end
-    strip.setPixelColor(baseNum, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 1, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 2, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-    strip.setPixelColor(baseNum - 3, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //fuckin' rainbows
-  }
-  else {
-    strip.setPixelColor(i, 0, 0, 0); //black
-  }
-}
-
-//attempting to selectively light two tables sides, north and south
-void northSouthChaseFull(uint8_t wait) {
-  uint16_t i, j, c, tickSpeed;
-  tickSpeed = 2;
-  c = strip.numPixels();
-
-  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
-
-    for (i = 0; i < strip.numPixels(); i++) {
-
-      if ((j * tickSpeed) % strip.numPixels() == i) {
-        offsetChaserNorthSouth(i, j, 0);
-        offsetChaserNorthSouth(i, j, 36);
-        offsetChaserNorthSouth(i, j, 72);
-
-      }
-      else {
-        //strip.setPixelColor(i, 0, 0, 0); //black
-      }
-    }
-    strip.show();
-    delay(wait);
-  }
-}
-
-// Slightly different, this makes the rainbow equally distributed throughout
-void rainbowCycleNorthSouth(uint8_t wait) {
-  uint16_t i, j;
-
-  for (j = 0; j < 256 * 5; j++) { // 5 cycles of all colors on wheel
-    for (i = 0; i < strip.numPixels(); i++) {
-      if (i > 35 && i < 90) {
-        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      }
-      else if (i > 122) {
-        strip.setPixelColor(0, Wheel(((i * 256 / strip.numPixels()) + j) & 255)); //a little hacky, but 122+, and 0-1, are necessary for North Side
-        strip.setPixelColor(1, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-        strip.setPixelColor(i, Wheel(((i * 256 / strip.numPixels()) + j) & 255));
-      }
-      else {
-        strip.setPixelColor(i, 0, 0, 0); //black
-      }
-    }
-    strip.show();
-    delay(wait);
-  }
-}
 
 int* amandaColorHolder(int selection) {
 
