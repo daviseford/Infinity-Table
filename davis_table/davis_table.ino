@@ -50,18 +50,18 @@ void connectingPixels( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
   int traceR, traceG, traceB, bgR, bgG, bgB;
 
-  northPixel = 150;                                                               // pixel at the top of the table
-  southPixel = 63;
-  eastPixel = 108;                                                                // right side halfway point
-  westPixel = 18;                                                                 // left side
+  northPixel = 150; // pixel at the top of the table
+  southPixel = 63;  //pixel at the bottom of the table
+  eastPixel = 108;  // right side halfway point
+  westPixel = 18;   // left side
 
-  traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
-  traceG = rand() % 255;
+  traceR = rand() % 255; // re-roll the random dice every time a loop is completed
+  traceG = rand() % 255; // we need a value between 0 and 255 (to pass in as RGB values)
   traceB = rand() % 255;
 
-  bgR = 0; //initialize these values to whatever you want
-  bgG = 0;
-  bgB = 0;
+  bgR = 0; //background colors
+  bgG = 0; //initialize these values to whatever you want
+  bgB = 0; //they are only used on the first lap. think of it as "booting up"
 
   /* this loop controls the number of times the full sequence will run.
    * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
