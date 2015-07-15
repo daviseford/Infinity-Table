@@ -1,6 +1,10 @@
 # Infinity-Table
 Code for an Infinity table.  
 
+#LED Diagram  
+Physical Assembly: 
+![alt text](http://daviseford.com/sites/default/files/table_led_map.png "LED Layout")
+
 #Notes  
 Our LED strip contains 174 pixels.  
 35 per side, East/West  
@@ -33,6 +37,3 @@ Hammer
 Drill  
 Level  
 Glass Cleaner (Ammonia Free)  
-
-
-TODO
