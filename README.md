@@ -2,7 +2,6 @@
 Code for an Infinity table.  
 
 #LED Diagram  
-Physical Assembly: 
 ![alt text](http://daviseford.com/sites/default/files/table_led_map.png "LED Layout")
 
 #Notes  
