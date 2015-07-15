@@ -2,7 +2,7 @@
 Code for an Infinity table.  
 
 #LED Diagram  
-![alt text](http://daviseford.com/sites/default/files/table_led_map.png "LED Layout")
+![alt text](http://daviseford.com/sites/default/files/table_led.png "LED Layout")
 
 #Notes  
 Our LED strip contains 174 pixels.  
