@@ -48,7 +48,7 @@ int returnNumber(int number) {
 
 void davisFlame( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northPixel, southPixel, eastPixel, westPixel;
-  int tracerLength, traceR, traceG, traceB, bgR, bgG, bgB, flameLength;
+  int tracerLength, traceR, traceG, traceB, bgR, bgG, bgB, flameLength, northLimiter, southLimiter;
 
   northPixel = 150;                                                               // pixel at the top of the table
   southPixel = 63;
@@ -59,13 +59,15 @@ void davisFlame( uint8_t wait) {
   traceG = 0;
   traceB = 0;
 
-  bgR = 50; //initialize these values to whatever you want
+  bgR = 0; //initialize these values to whatever you want
   bgG = 0; //backgroundColors
   bgB = 0; //recommended to be black for this effect
 
   //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43+ 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
   flameLength = rand() % 3; //how much to increment the tips of the flames
+  northLimiter = rand() % 43;
+  southLimiter = rand() % 43;
   /* this loop controls the number of times the full sequence will run.
    * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
    * tracers are then deployed towards east and west ends of the table.
@@ -84,7 +86,7 @@ void davisFlame( uint8_t wait) {
         }
 
         /* Only LEDs on the east side iwll be updating
-         *  
+         *
          */
 
         /*GOnna add a random offsett to this logic check
@@ -92,11 +94,11 @@ void davisFlame( uint8_t wait) {
          * this will make the  flames appear more random in theory
          */
 
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
-          strip.setPixelColor(i, traceR+((northPixel-i)*flameLength), traceG, traceB);
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel + northLimiter) {
+          strip.setPixelColor(i, traceR + ((northPixel - i)*flameLength), traceG, traceB);
         }
-        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
-          strip.setPixelColor(i, traceR+((i-southPixel)*flameLength), traceG, traceB);
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel - southLimiter) {
+          strip.setPixelColor(i, traceR + ((i - southPixel)*flameLength), traceG, traceB);
         }
       }
 
@@ -116,12 +118,12 @@ void davisFlame( uint8_t wait) {
         else if (i >= northPixel || i <= southPixel ) {         // west side always on
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
-       
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
-          strip.setPixelColor(i, traceR+((northPixel-i)*flameLength), traceG, traceB);
+
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel + northLimiter) {
+          strip.setPixelColor(i, traceR + ((northPixel - i)*flameLength), traceG, traceB);
         }
         else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
-          strip.setPixelColor(i, traceR+((i-southPixel)*flameLength), traceG, traceB);
+          strip.setPixelColor(i, traceR + ((i - southPixel)*flameLength), traceG, traceB - southLimiter);
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -136,10 +138,12 @@ void davisFlame( uint8_t wait) {
     }
 
     northEastCounter = 0;
-    southEastCounter = 0;    
+    southEastCounter = 0;
 
     //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+    tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+    northLimiter = rand() % 20;
+  southLimiter = rand() % 20;
   }
 }
 
@@ -397,7 +401,7 @@ void connectingPixelsBlack( uint8_t wait) {
     traceB = rand() % 255;
 
     //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+    tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
   }
 }
 
