@@ -56,16 +56,16 @@ void davisFlame( uint8_t wait) {
   westPixel = 18;                                                                 // left side
 
   traceR = rand() % 255;  //only want reds
-  traceG = rand() % 0;
-  traceB = rand() % 0;
+  traceG = 0;
+  traceB = 0;
 
   bgR = 0; //initialize these values to whatever you want
   bgG = 0; //backgroundColors
   bgB = 0; //recommended to be black for this effect
 
   //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
-  flameLength = 3; //how much to increment the tips of the flames
+  tracerLength = rand() % 43+ 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  flameLength = 2; //how much to increment the tips of the flames
   /* this loop controls the number of times the full sequence will run.
    * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
    * tracers are then deployed towards east and west ends of the table.
@@ -86,6 +86,8 @@ void davisFlame( uint8_t wait) {
         /* Only LEDs on the east side iwll be updating
          *  
          */
+
+        
 
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
           strip.setPixelColor(i, traceR+((northPixel-i)*flameLength), traceG, traceB);
@@ -134,8 +136,8 @@ void davisFlame( uint8_t wait) {
     southEastCounter = 0;    
 
     traceR = rand() % 255;  //only want reds
-  traceG = rand() % 0;
-  traceB = rand() % 0;
+  traceG = 0;
+  traceB = 0;
 
     //tracerLength = 43; //this will make the ends  meet every time
   tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
