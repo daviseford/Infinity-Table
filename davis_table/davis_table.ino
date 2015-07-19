@@ -81,10 +81,7 @@ void davisFlame( uint8_t wait) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
-        if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
-          strip.setPixelColor(i, traceR, traceG, traceB);
-        }
-        else if (i >= northPixel || i <= southPixel) {         // set west half to always on
+        if (i >= northPixel || i <= southPixel) {         // set west half to always on
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
 
@@ -97,11 +94,11 @@ void davisFlame( uint8_t wait) {
          * this will make the  flames appear more random in theory
          */
 
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR + ((northPixel - i)*flameR), traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
+        else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
+          strip.setPixelColor(i, traceR + ((i-eastPixel)*flameR), traceG + ((i-eastPixel)*flameG), traceB + ((i-eastPixel)*flameB));
         }
-        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR + ((i - southPixel)*flameR), traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
+        else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
+          strip.setPixelColor(i, traceR + ((eastPixel - i)*flameR), traceG + ((eastPixel - i)*flameG), traceB + ((eastPixel - i)*flameB));
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -118,20 +115,16 @@ void davisFlame( uint8_t wait) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
-        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
-          strip.setPixelColor(i, traceR, traceG, traceB);
-        }
-        else if (i >= northPixel || i <= southPixel ) {         // west side always on
+         if (i >= northPixel || i <= southPixel ) {         // west side always on
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
 
-        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR + ((northPixel - i)*flameR), traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
+        else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
+          strip.setPixelColor(i, traceR + ((i-eastPixel)*flameR), traceG + ((i-eastPixel)*flameG), traceB + ((i-eastPixel)*flameB));
         }
-        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR + ((i - southPixel)*flameR), traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
+        else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
+          strip.setPixelColor(i, traceR + ((eastPixel - i)*flameR), traceG + ((eastPixel - i)*flameG), traceB + ((eastPixel - i)*flameB));
         }
-
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
         }
@@ -152,7 +145,7 @@ void davisFlame( uint8_t wait) {
     northLimiter = rand() % 30 + 5;
     southLimiter = rand() % 30 + 4;
 
-    flameR = rand() % 3; //how much to increment the tips of the flames
+    flameR = 0; //how much to increment the tips of the flames
     flameB = rand() % 4;
     flameG = rand() % 2;
 
