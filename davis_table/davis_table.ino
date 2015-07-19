@@ -66,7 +66,7 @@ void davisFlame( uint8_t wait) {
 
   tracerLength = 43; //this will make the ends  meet every time
   //tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
-  flameR = rand() % 3; //how much to increment the tips of the flames
+  flameR = 0; //how much to increment the tips of the flames
   flameB = rand() % 4;
   flameG = rand() % 2;
   northLimiter = rand() % 43;
