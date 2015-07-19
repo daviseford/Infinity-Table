@@ -63,6 +63,9 @@ void connectingPixels( uint8_t wait) {
   bgG = 0; //initialize these values to whatever you want
   bgB = 0; //they are only used on the first lap. think of it as "booting up"
 
+  //tracerLength = 43; //this will make the ends  meet every time
+  tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+
   /* this loop controls the number of times the full sequence will run.
    * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
    * tracers are then deployed towards east and west ends of the table.
@@ -70,7 +73,7 @@ void connectingPixels( uint8_t wait) {
    * set cycle to 50 to see this effect 50 times, for example
    */
   for (int cycle = 0; cycle < 30; cycle++) {
-    for (tick = 0; tick < 43; tick++) {                                           // overall loop
+    for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -110,7 +113,7 @@ void connectingPixels( uint8_t wait) {
       southEastCounter++;
     }
 
-    for (tick = 0; tick < 43; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
+    for (tick = 0; tick < tracerLength; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
@@ -165,6 +168,9 @@ void connectingPixels( uint8_t wait) {
     traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
     traceG = rand() % 255;
     traceB = rand() % 255;
+
+    tracerLength = rand() % 43;
+    //tracerLength = 43;
   }
 }
 
