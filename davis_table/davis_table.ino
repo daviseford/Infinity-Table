@@ -48,7 +48,7 @@ int returnNumber(int number) {
 
 void connectingPixels( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northWestCounter, southWestCounter, northPixel, southPixel, eastPixel, westPixel, remainder;
-  int traceR, traceG, traceB, bgR, bgG, bgB;
+  int traceR, traceG, traceB, bgR, bgG, bgB, tracerLength;
 
   northPixel = 150; // pixel at the top of the table
   southPixel = 63;  //pixel at the bottom of the table
@@ -169,8 +169,8 @@ void connectingPixels( uint8_t wait) {
     traceG = rand() % 255;
     traceB = rand() % 255;
 
-    tracerLength = rand() % 43;
-    //tracerLength = 43;
+    //tracerLength = 43; //this will make the ends  meet every time
+    tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
   }
 }
 
