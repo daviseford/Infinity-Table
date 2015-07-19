@@ -20,7 +20,8 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  connectingPixelsBlack(10);
+  davisFlame(45);
+  //connectingPixelsBlack(10);
   //connectingPixels(20);
   //davisRandomChaser(15);
   //amandaColors(20);
@@ -43,6 +44,106 @@ void colorWipe(uint32_t c, uint8_t wait) {
 
 int returnNumber(int number) {
   return number;
+}
+
+void davisFlame( uint8_t wait) {
+  int i, looper, tick, northEastCounter, southEastCounter, northPixel, southPixel, eastPixel, westPixel;
+  int tracerLength, traceR, traceG, traceB, bgR, bgG, bgB, flameLength;
+
+  northPixel = 150;                                                               // pixel at the top of the table
+  southPixel = 63;
+  eastPixel = 108;                                                                // right side halfway point
+  westPixel = 18;                                                                 // left side
+
+  traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+  traceG = rand() % 0;
+  traceB = rand() % 0;
+
+  bgR = 0; //initialize these values to whatever you want
+  bgG = 0;
+  bgB = 0;
+
+  //tracerLength = 43; //this will make the ends  meet every time
+  tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  flameLength = 3; //how much to increment the tips of the flames
+  /* this loop controls the number of times the full sequence will run.
+   * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
+   * tracers are then deployed towards east and west ends of the table.
+   * a sequence ends when the tracers return to their starting position and a new RGB value is generated
+   * set cycle to 50 to see this effect 50 times, for example
+   */
+  for (int cycle = 0; cycle < 30; cycle++) {
+    for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
+
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i >= northPixel || i <= southPixel) {         // set west half to always on
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+
+        /* Only LEDs on the east side iwll be updating
+         *  
+         */
+
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
+          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+        }
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
+          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+        }
+      }
+
+      strip.show();
+      delay(wait);
+
+      northEastCounter--;
+      southEastCounter++;
+    }
+
+    for (tick = 0; tick < tracerLength; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
+
+      for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
+        if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+        else if (i >= northPixel || i <= southPixel ) {         // west side always on
+          strip.setPixelColor(i, traceR, traceG, traceB);
+        }
+       
+        else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
+          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+        }
+        else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
+          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 0);
+        }
+      }
+
+      strip.show();
+      delay(wait);
+
+      northEastCounter++;
+      southEastCounter--;
+    }
+
+    northEastCounter = 0;
+    southEastCounter = 0;
+
+    bgR = returnNumber(traceR);
+    bgG = returnNumber(traceG);
+    bgB = returnNumber(traceB);
+
+    traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+    traceG = rand() % 255;
+    traceB = rand() % 255;
+
+    //tracerLength = 43; //this will make the ends  meet every time
+  tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  }
 }
 
 
@@ -299,7 +400,7 @@ void connectingPixelsBlack( uint8_t wait) {
     traceB = rand() % 255;
 
     //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
   }
 }
 
