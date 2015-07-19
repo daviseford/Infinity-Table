@@ -42,6 +42,24 @@ void colorWipe(uint32_t c, uint8_t wait) {
   }
 }
 
+int returnGreaterValue(int x, int y) {
+  if (x > y) {
+    return x;
+  }
+  else if (y >= x) {
+    return y;
+  }
+}
+
+int returnLesserValue(int x, int y) {
+  if (x < y) {
+    return x;
+  }
+  else if (y <= x) {
+    return y;
+  }
+}
+
 int returnNumber(int number) {
   return number;
 }
@@ -62,15 +80,20 @@ void davisFlame( uint8_t wait) {
 
   bgR = 0; //initialize these values to whatever you want
   bgG = 0; //backgroundColors
-  bgB = 0; //recommended to be black for this effect
+  bgB = 90; //recommended to be black for this effect
 
-  tracerLength = 43; //this will make the ends  meet every time
+
+  //tracerLength = 43; //this will make the ends  meet every time
   //tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
-  flameR = 0; //how much to increment the tips of the flames
-  flameB = rand() % 4;
-  flameG = rand() % 2;
+  flameR = 1; //how much to increment the tips of the flames
+  flameB = 1;
+  flameG = 3;
   northLimiter = rand() % 43;
   southLimiter = rand() % 43;
+
+  tracerLength = 43 - returnLesserValue(northLimiter, southLimiter);
+
+
   /* this loop controls the number of times the full sequence will run.
    * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
    * tracers are then deployed towards east and west ends of the table.
@@ -85,8 +108,7 @@ void davisFlame( uint8_t wait) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
 
-        /* Only LEDs on the east side iwll be updating
-         *
+        /* Only LEDs on the east side will be updating
          */
 
         /*GOnna add a random offsett to this logic check
@@ -95,10 +117,10 @@ void davisFlame( uint8_t wait) {
          */
 
         else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR + ((i-eastPixel)*flameR), traceG + ((i-eastPixel)*flameG), traceB + ((i-eastPixel)*flameB));
+          strip.setPixelColor(i, traceR, traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
         }
         else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR + ((eastPixel - i)*flameR), traceG + ((eastPixel - i)*flameG), traceB + ((eastPixel - i)*flameB));
+          strip.setPixelColor(i, traceR, traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -115,15 +137,15 @@ void davisFlame( uint8_t wait) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // this loop reverses the tracer, filling the background color behind it
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
-         if (i >= northPixel || i <= southPixel ) {         // west side always on
+        if (i >= northPixel || i <= southPixel ) {         // west side always on
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
 
         else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR + ((i-eastPixel)*flameR), traceG + ((i-eastPixel)*flameG), traceB + ((i-eastPixel)*flameB));
+          strip.setPixelColor(i, traceR, traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
         }
         else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR + ((eastPixel - i)*flameR), traceG + ((eastPixel - i)*flameG), traceB + ((eastPixel - i)*flameB));
+          strip.setPixelColor(i, traceR, traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -140,15 +162,17 @@ void davisFlame( uint8_t wait) {
     northEastCounter = 0;
     southEastCounter = 0;
 
-    tracerLength = 43; //this will make the ends  meet every time
+    //tracerLength = 43; //this will make the ends  meet every time
     //tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
-    northLimiter = rand() % 30 + 5;
-    southLimiter = rand() % 30 + 4;
 
-    flameR = 0; //how much to increment the tips of the flames
-    flameB = rand() % 4;
-    flameG = rand() % 2;
+    northLimiter = rand() % 30;
+    southLimiter = rand() % 30;
 
+    flameR = 1; //how much to increment the tips of the flames
+    flameB = rand() % 5;
+    flameG = 3;
+
+    tracerLength = 43 - returnLesserValue(northLimiter, southLimiter);
   }
 }
 
