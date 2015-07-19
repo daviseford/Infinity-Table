@@ -20,7 +20,7 @@ void setup() {
 
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisFlame(45);
+  davisFlame(1);
   //connectingPixelsBlack(10);
   //connectingPixels(20);
   //davisRandomChaser(15);
@@ -63,8 +63,8 @@ void davisFlame( uint8_t wait) {
   bgG = 0; //backgroundColors
   bgB = 0; //recommended to be black for this effect
 
-  //tracerLength = 43; //this will make the ends  meet every time
-  tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+  tracerLength = 43; //this will make the ends  meet every time
+  //tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
   flameLength = rand() % 3; //how much to increment the tips of the flames
   northLimiter = rand() % 43;
   southLimiter = rand() % 43;
@@ -140,8 +140,8 @@ void davisFlame( uint8_t wait) {
     northEastCounter = 0;
     southEastCounter = 0;
 
-    //tracerLength = 43; //this will make the ends  meet every time
-    tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
+    tracerLength = 43; //this will make the ends  meet every time
+    //tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
     northLimiter = rand() % 20;
   southLimiter = rand() % 20;
   }
