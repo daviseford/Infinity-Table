@@ -55,13 +55,13 @@ void davisFlame( uint8_t wait) {
   eastPixel = 108;                                                                // right side halfway point
   westPixel = 18;                                                                 // left side
 
-  traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
+  traceR = rand() % 255;  //only want reds
   traceG = rand() % 0;
   traceB = rand() % 0;
 
   bgR = 0; //initialize these values to whatever you want
-  bgG = 0;
-  bgB = 0;
+  bgG = 0; //backgroundColors
+  bgB = 0; //recommended to be black for this effect
 
   //tracerLength = 43; //this will make the ends  meet every time
   tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
@@ -88,10 +88,10 @@ void davisFlame( uint8_t wait) {
          */
 
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
-          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+          strip.setPixelColor(i, traceR+((northPixel-i)*flameLength), traceG, traceB);
         }
         else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
-          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+          strip.setPixelColor(i, traceR+((i-southPixel)*flameLength), traceG, traceB);
         }
       }
 
@@ -113,13 +113,13 @@ void davisFlame( uint8_t wait) {
         }
        
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
-          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+          strip.setPixelColor(i, traceR+((northPixel-i)*flameLength), traceG, traceB);
         }
         else if (i <= southPixel + southEastCounter && i >= southPixel && i <= eastPixel) {
-          strip.setPixelColor(i, traceR+(tracerLength*flameLength), traceG, traceB);
+          strip.setPixelColor(i, traceR+((i-southPixel)*flameLength), traceG, traceB);
         }
         else {
-          strip.setPixelColor(i, 0, 0, 0);
+          strip.setPixelColor(i, bgR, bgG, bgB);
         }
       }
 
@@ -131,15 +131,11 @@ void davisFlame( uint8_t wait) {
     }
 
     northEastCounter = 0;
-    southEastCounter = 0;
+    southEastCounter = 0;    
 
-    bgR = returnNumber(traceR);
-    bgG = returnNumber(traceG);
-    bgB = returnNumber(traceB);
-
-    traceR = rand() % 255;                                                     // re-roll the random dice every time a loop is completed
-    traceG = rand() % 255;
-    traceB = rand() % 255;
+    traceR = rand() % 255;  //only want reds
+  traceG = rand() % 0;
+  traceB = rand() % 0;
 
     //tracerLength = 43; //this will make the ends  meet every time
   tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
