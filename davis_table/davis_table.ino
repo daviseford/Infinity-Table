@@ -64,6 +64,15 @@ int returnNumber(int number) {
   return number;
 }
 
+int limitRGBValue(int value) {
+  if(value >= 255) {
+    return 255;
+  }
+  else if(value <= 0) {
+    return 0;
+  }
+}
+
 void davisFlame( uint8_t wait) {
   int i, looper, tick, northEastCounter, southEastCounter, northPixel, southPixel, eastPixel, westPixel;
   int tracerLength, traceR, traceG, traceB, bgR, bgG, bgB;
@@ -83,15 +92,15 @@ void davisFlame( uint8_t wait) {
   bgB = 99; //recommended to be black for this effect
 
 
-  
+  tracerLength = 56;
   //tracerLength = rand() % 43 + 17; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
-  flameR = 1; //how much to increment the tips of the flames
-  flameB = 3;
-  flameG = 0;
-  northLimiter = rand() % 56;
-  southLimiter = rand() % 56;
+  flameR = rand() % 2; //how much to increment the tips of the flames
+  flameB = rand() % 2;
+  flameG = rand() % 2;
+  northLimiter = 0;
+  southLimiter = 0;
 
-  tracerLength = 57 - returnLesserValue(northLimiter, southLimiter);
+  //tracerLength = 57 - returnLesserValue(northLimiter, southLimiter);
 
 
   /* this loop controls the number of times the full sequence will run.
@@ -117,10 +126,10 @@ void davisFlame( uint8_t wait) {
          */
 
         else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR - ((northPixel - i)*flameR), traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
+          strip.setPixelColor(i, limitRGBValue(traceR - ((northPixel - i)*flameR)), limitRGBValue(traceG + ((northPixel - i)*flameG)), limitRGBValue(traceB + ((northPixel - i)*flameB)));
         }
         else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR - ((southPixel - i)*flameR), traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
+          strip.setPixelColor(i, limitRGBValue(traceR - ((southPixel - i)*flameR)), limitRGBValue(traceG + ((i - southPixel)*flameG)), limitRGBValue(traceB + ((i - southPixel)*flameB)));
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -142,10 +151,10 @@ void davisFlame( uint8_t wait) {
         }
 
         else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
-          strip.setPixelColor(i, traceR - ((northPixel - i)*flameR), traceG + ((northPixel - i)*flameG), traceB + ((northPixel - i)*flameB));
+          strip.setPixelColor(i, limitRGBValue(traceR - ((northPixel - i)*flameR)), limitRGBValue(traceG + ((northPixel - i)*flameG)), limitRGBValue(traceB + ((northPixel - i)*flameB)));
         }
         else if (i <= southPixel + southEastCounter && i > southPixel && i <= eastPixel - southLimiter) {
-          strip.setPixelColor(i, traceR - ((southPixel - i)*flameR), traceG + ((i - southPixel)*flameG), traceB + ((i - southPixel)*flameB));
+          strip.setPixelColor(i, limitRGBValue(traceR - ((southPixel - i)*flameR)), limitRGBValue(traceG + ((i - southPixel)*flameG)), limitRGBValue(traceB + ((i - southPixel)*flameB)));
         }
         else {
           strip.setPixelColor(i, bgR, bgG, bgB);
@@ -162,17 +171,20 @@ void davisFlame( uint8_t wait) {
     northEastCounter = 0;
     southEastCounter = 0;
 
-    //tracerLength = 43; //this will make the ends  meet every time
+    tracerLength = 56; //this will make the ends  meet every time
     //tracerLength = rand() % 43 + 13; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
 
-    northLimiter = rand() % 50;
-    southLimiter = rand() % 50;
+    //northLimiter = rand() % 50;
+    //southLimiter = rand() % 50;
 
-    flameR = rand() % 3; //how much to increment the tips of the flames
+    northLimiter = 0;
+    southLimiter = 0;
+
+    flameR = rand() % 4; //how much to increment the tips of the flames
     flameB = rand() % 3;
-    flameG = 0;
+    flameG = rand() % 10;
 
-    tracerLength = 57 - returnLesserValue(northLimiter, southLimiter);
+    //tracerLength = 57 - returnLesserValue(northLimiter, southLimiter);
   }
 }
 
@@ -392,7 +404,7 @@ void connectingPixelsBlack( uint8_t wait) {
         else if (remainder >= 0 && i >= 0 && i <= remainder && i <= westPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
           strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
         }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
-
+      
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
