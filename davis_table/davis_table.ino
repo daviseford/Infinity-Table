@@ -18,19 +18,22 @@ void setup() {
   strip.show(); // Initialize all pixels to 'off'
 }
 
+// Amanda is my girlfriend
+// Matt is the hardware guy
+// Braum is a great guy
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisFlame(25);
-  //connectingPixelsBlack(10);
-  //connectingPixels(20);
-  //davisRandomChaser(15);
-  //amandaColors(20);
-  //rainbowCycle(15);
-  //rainbowFull(15);
-  //rainbowDavis(15);
-  //colorWave(13);
-  //colorWipe(strip.Color(0, 0, 0), 100); // Black
-
+  davisFlame(15);
+  connectingPixelsBlack(10);
+  braumChaser(10);
+  connectingPixels(20);
+  davisRandomChaser(15);
+  amandaColors(20);
+  rainbowCycle(15);
+  rainbowFull(15);
+  rainbowDavis(15);
+  colorWave(13);
+  colorWipe(strip.Color(0, 0, 0), 100); // Black
 }
 
 // Fill the dots one after the other with a color
@@ -65,10 +68,10 @@ int returnNumber(int number) {
 }
 
 int limitRGBValue(int value) {
-  if(value >= 255) {
+  if (value >= 255) {
     return 255;
   }
-  else if(value <= 0) {
+  else if (value <= 0) {
     return 0;
   }
 }
@@ -109,7 +112,7 @@ void davisFlame( uint8_t wait) {
    * a sequence ends when the tracers return to their starting position and a new RGB value is generated
    * set cycle to 50 to see this effect 50 times, for example
    */
-  for (int cycle = 0; cycle < 30; cycle++) {
+  for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
@@ -215,7 +218,7 @@ void connectingPixels( uint8_t wait) {
    * a sequence ends when the tracers return to their starting position and a new RGB value is generated
    * set cycle to 50 to see this effect 50 times, for example
    */
-  for (int cycle = 0; cycle < 30; cycle++) {
+  for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
@@ -344,7 +347,7 @@ void connectingPixelsBlack( uint8_t wait) {
    * a sequence ends when the tracers return to their starting position and a new RGB value is generated
    * set cycle to 50 to see this effect 50 times, for example
    */
-  for (int cycle = 0; cycle < 30; cycle++) {
+  for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
@@ -404,7 +407,7 @@ void connectingPixelsBlack( uint8_t wait) {
         else if (remainder >= 0 && i >= 0 && i <= remainder && i <= westPixel) {  // if the remainder is greater than 0 (i.e. we have overrun the number of LEDs in the strip)
           strip.setPixelColor(i, traceR, traceG, traceB);                         // fill up to the remainder (which will be between 0-18)
         }                                                                         // this is just to handle going from LED 174 -> 0 -> 1 -> etc
-      
+
         else if (i >= northPixel + northEastCounter && i <= northPixel && i >= eastPixel) {
           strip.setPixelColor(i, traceR, traceG, traceB);
         }
@@ -449,7 +452,7 @@ void connectingPixelsBlack( uint8_t wait) {
 // Experimenting with a chaser that bounces back and forth.
 // -Davis
 void davisRandomChaser(uint8_t wait) {
-  uint16_t i, j, tick, cycle;
+  uint16_t i, j, k, tick, cycle;
   cycle = 15; //how many times we'll do a full loop (forward and back)
   for (tick = 0; tick < cycle; tick++) {
 
@@ -457,14 +460,15 @@ void davisRandomChaser(uint8_t wait) {
     int randomGreen = rand() % 255;
     int randomBlue = rand() % 255;
 
-    for (j = strip.numPixels(); j > 0; j--) {
+    for (j = strip.numPixels(); j > 0; j--) { //update the whole table with the following conditions
 
       for (i = 0; i < strip.numPixels(); i++) {
         if (j % strip.numPixels() == i) {
           strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
+
+          for (k = 0; k < 4; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
         }
         else {
           strip.setPixelColor(i, 0, 0, 64); //blue
@@ -497,6 +501,50 @@ void davisRandomChaser(uint8_t wait) {
   }
 
 }
+
+
+void braumChaser(uint8_t wait) {
+  uint16_t i, j, k, tick, cycle;
+  cycle = 15; //how many times we'll do a full loop (forward and back)
+  for (tick = 0; tick < cycle; tick++) {
+
+    int randomRed = rand() % 255; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 255;
+    int randomBlue = rand() % 255;
+
+    for (j = strip.numPixels(); j > 0; j--) { //update the whole table with the following conditions
+
+      for (i = 0; i < strip.numPixels(); i++) {
+        int randomPixel = rand() % 174;
+
+        if (i == randomPixel) {
+          strip.setPixelColor(i, 0, 0, 0);
+        }
+
+
+
+        //        if (j % strip.numPixels() == i) {
+        //          //             strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
+        //          strip.setPixelColor(i, 0, 0, 0);
+        //
+        //           strip.setPixelColor(i-20, 0, 0, 0);
+        //
+        //        }
+        else {
+          strip.setPixelColor(i, 255, 0, 0); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+
+
+  }
+
+}
+
 
 
 // Slightly different, this makes the rainbow equally distributed throughout
@@ -538,7 +586,7 @@ void colorWave(uint8_t wait) {
   static int tick = 0;
 
   stripsize = strip.numPixels();
-  cycle = stripsize * 7; // times around the circle...
+  cycle = stripsize * 3; // times around the circle...
 
   while (++tick % cycle) {
     offset = map2PI(tick);
