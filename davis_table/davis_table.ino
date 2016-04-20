@@ -25,10 +25,11 @@ void loop() {
   // Some example procedures showing how to display to the pixels:
   davisFlame(15);
   connectingPixelsBlack(10);
-  braumChaser(10);
+  // braumChaser(10);
   connectingPixels(20);
   davisRandomChaser(15);
-  amandaColors(20);
+  davisRandomGlitch(15);
+  // amandaColors(20);
   rainbowCycle(15);
   rainbowFull(15);
   rainbowDavis(15);
@@ -107,11 +108,11 @@ void davisFlame( uint8_t wait) {
 
 
   /* this loop controls the number of times the full sequence will run.
-   * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
-   * tracers are then deployed towards east and west ends of the table.
-   * a sequence ends when the tracers return to their starting position and a new RGB value is generated
-   * set cycle to 50 to see this effect 50 times, for example
-   */
+     a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
+     tracers are then deployed towards east and west ends of the table.
+     a sequence ends when the tracers return to their starting position and a new RGB value is generated
+     set cycle to 50 to see this effect 50 times, for example
+  */
   for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
@@ -121,12 +122,12 @@ void davisFlame( uint8_t wait) {
         }
 
         /* Only LEDs on the east side will be updating
-         */
+        */
 
         /*GOnna add a random offsett to this logic check
-         * basically just to enable a "de-sync" of the tracer endpoints
-         * this will make the  flames appear more random in theory
-         */
+           basically just to enable a "de-sync" of the tracer endpoints
+           this will make the  flames appear more random in theory
+        */
 
         else if (i >= northPixel + northEastCounter && i < northPixel && i >= eastPixel + northLimiter) {
           strip.setPixelColor(i, limitRGBValue(traceR - ((northPixel - i)*flameR)), limitRGBValue(traceG + ((northPixel - i)*flameG)), limitRGBValue(traceB + ((northPixel - i)*flameB)));
@@ -213,20 +214,20 @@ void connectingPixels( uint8_t wait) {
   //tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
 
   /* this loop controls the number of times the full sequence will run.
-   * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
-   * tracers are then deployed towards east and west ends of the table.
-   * a sequence ends when the tracers return to their starting position and a new RGB value is generated
-   * set cycle to 50 to see this effect 50 times, for example
-   */
+     a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
+     tracers are then deployed towards east and west ends of the table.
+     a sequence ends when the tracers return to their starting position and a new RGB value is generated
+     set cycle to 50 to see this effect 50 times, for example
+  */
   for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
       /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
-      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
-      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
-       */
+        So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+        The remainder is what needs to be added to 0 to keep the led update pushing from 0-18
+      */
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
         if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
@@ -264,9 +265,9 @@ void connectingPixels( uint8_t wait) {
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
       /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
-      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
-      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
-       */
+        So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+        The remainder is what needs to be added to 0 to keep the led update pushing from 0-18
+      */
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
         if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
@@ -342,20 +343,20 @@ void connectingPixelsBlack( uint8_t wait) {
   tracerLength = rand() % 43; //leave this enabled for a more random tracer sequence. you can set a minimum by modifying this to read rand() % 43 + 10 (or whatever)
 
   /* this loop controls the number of times the full sequence will run.
-   * a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
-   * tracers are then deployed towards east and west ends of the table.
-   * a sequence ends when the tracers return to their starting position and a new RGB value is generated
-   * set cycle to 50 to see this effect 50 times, for example
-   */
+     a full sequence begins with two pixels enabled in the middle of the north and south ends of the table
+     tracers are then deployed towards east and west ends of the table.
+     a sequence ends when the tracers return to their starting position and a new RGB value is generated
+     set cycle to 50 to see this effect 50 times, for example
+  */
   for (int cycle = 0; cycle < 15; cycle++) {
     for (tick = 0; tick < tracerLength; tick++) {                                           // overall loop
 
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
       /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
-      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
-      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
-       */
+        So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+        The remainder is what needs to be added to 0 to keep the led update pushing from 0-18
+      */
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
         if (i == southPixel || i == northPixel) {                                 // always leave these on, since they're our marker for north/south
@@ -393,9 +394,9 @@ void connectingPixelsBlack( uint8_t wait) {
       remainder = (northPixel + northWestCounter) - strip.numPixels();
 
       /*If our remainder is positive, that means we've crossed over from LED 174 to LED 0.
-      * So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
-      * The remainder is what needs to be added to 0 to keep the led update pushing from 0-18    *
-       */
+        So, we add our counter and starting position (northPixel), and subtract the number of LEDs.
+        The remainder is what needs to be added to 0 to keep the led update pushing from 0-18
+      */
 
       for (i = 0; i < strip.numPixels(); i++) {                                   // led update loop
         if (i == southPixel || i == northPixel) { //always leave these on, since they're our marker for north/south
@@ -464,11 +465,11 @@ void davisRandomChaser(uint8_t wait) {
 
       for (i = 0; i < strip.numPixels(); i++) {
         if (j % strip.numPixels() == i) {
-          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
 
           for (k = 0; k < 4; k++) {
             strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
           }
+
         }
         else {
           strip.setPixelColor(i, 0, 0, 64); //blue
@@ -481,13 +482,77 @@ void davisRandomChaser(uint8_t wait) {
     }
 
     for (j = 0; j < strip.numPixels(); j++) {
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+
+          for (k = 0; k < 4; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+  }
+
+}
+
+
+void davisRandomGlitch(uint8_t wait) {
+  uint16_t i, j, k, tick, cycle;
+  cycle = 15; //how many times we'll do a full loop (forward and back)
+  for (tick = 0; tick < cycle; tick++) {
+
+    int randomRed = rand() % 255; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 255;
+    int randomBlue = rand() % 255;
+
+    for (j = strip.numPixels(); j > 0; j--) { //update the whole table with the following conditions
 
       for (i = 0; i < strip.numPixels(); i++) {
         if (j % strip.numPixels() == i) {
-          strip.setPixelColor(i, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 1, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 2, randomRed, randomGreen, randomBlue);
-          strip.setPixelColor(i - 3, randomRed, randomGreen, randomBlue);
+
+          for (k = 0; k < 4; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+          int randomChaserAdditive = 10 + (rand() % 9);
+
+          for (k = randomChaserAdditive; k < (4 + randomChaserAdditive); k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+
+    for (j = 0; j < strip.numPixels(); j++) {
+      for (i = 0; i < strip.numPixels(); i++) {
+        if (j % strip.numPixels() == i) {
+
+          for (k = 0; k < 4; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+          int randomChaserAdditive = 10 + (rand() % 9);
+
+          for (k = randomChaserAdditive; k < (4 + randomChaserAdditive); k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
         }
         else {
           strip.setPixelColor(i, 0, 0, 64); //blue
@@ -575,10 +640,10 @@ uint32_t Wheel(byte WheelPos) {
 }
 
 /**
- *      ^   ^   ^
- * ~~~~~ ColorWave ~~~~~
- *        V   V   V
- */
+        ^   ^   ^
+   ~~~~~ ColorWave ~~~~~
+          V   V   V
+*/
 void colorWave(uint8_t wait) {
   int i, j, stripsize, cycle;
   float ang, rsin, gsin, bsin, offset;
@@ -606,12 +671,12 @@ void colorWave(uint8_t wait) {
 }
 
 /**
- * Scale a value returned from a trig function to a byte value.
- * [-1, +1] -> [0, 254]
- * Note that we ignore the possible value of 255, for efficiency,
- * and because nobody will be able to differentiate between the
- * brightness levels of 254 and 255.
- */
+   Scale a value returned from a trig function to a byte value.
+   [-1, +1] -> [0, 254]
+   Note that we ignore the possible value of 255, for efficiency,
+   and because nobody will be able to differentiate between the
+   brightness levels of 254 and 255.
+*/
 byte trigScale(float val) {
   val += 1.0; // move range to [0.0, 2.0]
   val *= 127.0; // move range to [0.0, 254.0]
@@ -620,8 +685,8 @@ byte trigScale(float val) {
 }
 
 /**
- * Map an integer so that [0, striplength] -> [0, 2PI]
- */
+   Map an integer so that [0, striplength] -> [0, 2PI]
+*/
 float map2PI(int i) {
   return PI * 2.0 * float(i) / float(strip.numPixels());
 }
@@ -1078,29 +1143,29 @@ int* amandaColorHolder(int selection) {
 }
 
 /*  Amanda's Custom Color Sequence, with automatic RGB value blending!
- *
- *  The following is a cheap way of incrementing/decrementing RGB values
- *  in order to produce a blending effect. We set the target RGB to pEndcolor,
- *  which is an array with 3 values [R, G, B]. The program will step through
- *  our r,g, and b variables and check them against the target. If the target value
- *  is greater than the current value, we increment the current value and check it again on the next loop.
- *
- *  When r,g, and b are equal to pEndColor[R,G,B]
- *  we increment the caseNum variable (passed to amandaColorHolder), which gives us our next target.
- *
- *  Notes: This isn't a mathematically perfect way of fading between colors. ¯\_(ツ)_/¯
- *
- *  Example of limitation:
- *
- *  Going from (255, 20, 20) to (255, 0, 0) will take twenty iterations.
- *  Going from (255, 255, 255) to (255, 0, 0) will take two hundred fifty five iterations.
- *  This means there is a time variance (colors appear for different lengths of time,
- *  depending on their RGB distance from the next value)
- *
- *  This can lead to flickering sequences with color values that are too close together.
- *
- *  -Davis Ford, 7/6/2015
- */
+
+    The following is a cheap way of incrementing/decrementing RGB values
+    in order to produce a blending effect. We set the target RGB to pEndcolor,
+    which is an array with 3 values [R, G, B]. The program will step through
+    our r,g, and b variables and check them against the target. If the target value
+    is greater than the current value, we increment the current value and check it again on the next loop.
+
+    When r,g, and b are equal to pEndColor[R,G,B]
+    we increment the caseNum variable (passed to amandaColorHolder), which gives us our next target.
+
+    Notes: This isn't a mathematically perfect way of fading between colors. ¯\_(ツ)_/¯
+
+    Example of limitation:
+
+    Going from (255, 20, 20) to (255, 0, 0) will take twenty iterations.
+    Going from (255, 255, 255) to (255, 0, 0) will take two hundred fifty five iterations.
+    This means there is a time variance (colors appear for different lengths of time,
+    depending on their RGB distance from the next value)
+
+    This can lead to flickering sequences with color values that are too close together.
+
+    -Davis Ford, 7/6/2015
+*/
 
 void amandaColors(uint8_t wait) {
   uint16_t i, j, caseNum;
@@ -1141,7 +1206,7 @@ void amandaColors(uint8_t wait) {
     }
 
     /*
-    * Set all pixels on the strip to the current r,g,b values
+      Set all pixels on the strip to the current r,g,b values
     */
     for (i = 0; i < strip.numPixels(); i++) {
       strip.setPixelColor(i, r, g, b);
@@ -1151,9 +1216,9 @@ void amandaColors(uint8_t wait) {
     delay(wait);
 
     /*  Check to see if r,g,b are equal to our target values.
-     *  If they are, increment caseNum (gives us a new target value)
-     *  and assign the new [R,G,B] values to pEndColor.
-     */
+        If they are, increment caseNum (gives us a new target value)
+        and assign the new [R,G,B] values to pEndColor.
+    */
     if (r == pEndColor[0] && g == pEndColor[1] && b == pEndColor[2]) {
       caseNum++;
       pEndColor = amandaColorHolder(caseNum);
