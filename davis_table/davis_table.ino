@@ -23,18 +23,19 @@ void setup() {
 // Braum is a great guy
 void loop() {
   // Some example procedures showing how to display to the pixels:
-  davisFlame(15);
-  connectingPixelsBlack(10);
+  //davisFlame(15);
+  //connectingPixelsBlack(10);
   // braumChaser(10);
-  connectingPixels(20);
-  davisRandomChaser(15);
-  davisRandomGlitch(15);
+  //connectingPixels(20);
+  //davisRandomChaser(15);
+  davisSnakeChaser(15);
+  //davisRandomGlitch(15);
   // amandaColors(20);
-  rainbowCycle(15);
-  rainbowFull(15);
-  rainbowDavis(15);
-  colorWave(13);
-  colorWipe(strip.Color(0, 0, 0), 100); // Black
+  //rainbowCycle(15);
+  //rainbowFull(15);
+  //rainbowDavis(15);
+  //colorWave(13);
+  //colorWipe(strip.Color(0, 0, 0), 100); // Black
 }
 
 // Fill the dots one after the other with a color
@@ -450,6 +451,8 @@ void connectingPixelsBlack( uint8_t wait) {
   }
 }
 
+
+
 // Experimenting with a chaser that bounces back and forth.
 // -Davis
 void davisRandomChaser(uint8_t wait) {
@@ -460,13 +463,14 @@ void davisRandomChaser(uint8_t wait) {
     int randomRed = rand() % 255; //re-roll the random dice every time a loop is completed
     int randomGreen = rand() % 255;
     int randomBlue = rand() % 255;
+    int trailLength = 1;
 
     for (j = strip.numPixels(); j > 0; j--) { //update the whole table with the following conditions
 
-      for (i = 0; i < strip.numPixels(); i++) {
-        if (j % strip.numPixels() == i) {
+      for (i = 0; i < strip.numPixels(); i++) { // indivdual tick, go around the whole strip once and update it's condition
+        if (j == i) {
 
-          for (k = 0; k < 4; k++) {
+          for (k = 0; k < trailLength; k++) {
             strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
           }
 
@@ -483,9 +487,103 @@ void davisRandomChaser(uint8_t wait) {
 
     for (j = 0; j < strip.numPixels(); j++) {
       for (i = 0; i < strip.numPixels(); i++) {
-        if (j % strip.numPixels() == i) {
+        if (j == i) {
 
-          for (k = 0; k < 4; k++) {
+          for (k = 0; k < trailLength; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+  }
+
+}
+
+void davisSnakeChaser(uint8_t wait) {
+  uint16_t i, j, k, tick, cycle;
+  cycle = 15; //how many times we'll do a full loop (forward and back)
+  int trailLength = 3;
+  int max = 15;
+  int min = 3;
+  int direction = 0;
+  for (tick = 0; tick < cycle; tick++) {
+
+    int randomRed = rand() % 255; //re-roll the random dice every time a loop is completed
+    int randomGreen = rand() % 255;
+    int randomBlue = rand() % 255;
+
+
+    for (j = strip.numPixels(); j > 0; j--) { //update the whole table with the following conditions
+
+      for (i = 0; i < strip.numPixels(); i++) { // indivdual tick, go around the whole strip once and update it's condition
+        int randomChance = rand() % 100;
+        if (j == i) {
+
+          if (randomChance < 7) {
+            if ( direction == 0 && trailLength < max) {
+              trailLength++;
+            }
+
+            if (direction = 0 && trailLength == max) {
+              direction = 1;
+            }
+
+            if ( direction == 1 && trailLength > min) {
+              trailLength--;
+            }
+
+            if (direction = 1 && trailLength == min) {
+              direction = 0;
+            }
+          }
+
+
+          for (k = 0; k < trailLength; k++) {
+            strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
+          }
+
+        }
+        else {
+          strip.setPixelColor(i, 0, 0, 64); //blue
+        }
+
+      }
+
+      strip.show();
+      delay(wait);
+    }
+
+    for (j = 0; j < strip.numPixels(); j++) {
+      for (i = 0; i < strip.numPixels(); i++) {
+        int randomChance = rand() % 100;
+        if (j == i) {
+
+          if (randomChance < 7) {
+            if ( direction == 0 && trailLength < max) {
+              trailLength++;
+            }
+
+            if (direction = 0 && trailLength == max) {
+              direction = 1;
+            }
+
+            if ( direction == 1 && trailLength > min) {
+              trailLength--;
+            }
+
+            if (direction = 1 && trailLength == min) {
+              direction = 0;
+            }
+          }
+          for (k = 0; k < trailLength; k++) {
             strip.setPixelColor(i - k, randomRed, randomGreen, randomBlue);
           }
 
